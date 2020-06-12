@@ -1,4 +1,12 @@
+<?php session_start(); ?>
+<?php require_once 'libraries/config/config.php'; ?>
 <?php include 'includes/header.php'; ?>
+<?php
+
+$db = getDbInstance();
+$specs = $db->get('specifications');
+?>
+
 <body class="bg-primary  d-flex flex-column  justify-content-center" >
 <style>
     #page-header{
@@ -179,87 +187,17 @@
                                     <div class="multisteps-form__content">
                                     <div class="form-row mt-4">
 
+                                    <?php foreach ($specs as $spec): ?>
+
+
                                         <div class="col-12 specifications-item col-sm-3 mt-sm-0 ">
                                             <span>
-                                                <input id="Pants" type="checkbox"/>
-                                                <label class="border rounded text-capitalize" for="Pants"> Pants
-                                                <i for="foo" class="fa fa-check" aria-hidden="true"></i>                                                </label>
+                                                <input data-price="<?php echo $spec['specification_price'];?>" class="spec-item-js" id=" <?php echo $spec['specification_id'];?>" type="checkbox"/>
+                                                <label class="border rounded text-capitalize" for=" <?php echo $spec['specification_id'];?>"> <?php echo $spec['specification_name'];?>
                                             </span>
                                         </div>
 
-                                        <div class="col-12 specifications-item col-sm-3 mt-sm-0 ">
-                                            <span>
-                                                <input id="Shirts" type="checkbox"/>
-                                                <label class="border rounded text-capitalize" for="Shirts">Shirts
-                                                <i for="foo" class="fa fa-check" aria-hidden="true"></i>                                                </label>
-                                            </span>
-                                        </div>
-
-                                        <div class="col-12 specifications-item col-sm-3 mt-sm-0 ">
-                                            <span>
-                                                <input id="Lengha" type="checkbox"/>
-                                                <label class="border rounded text-capitalize" for="Lengha">Lengha
-                                                <i for="foo" class="fa fa-check" aria-hidden="true"></i>                                                </label>
-                                            </span>
-                                        </div>
-                                        <div class="col-12 specifications-item col-sm-3 mt-sm-0 ">
-                                            <span>
-                                                <input id="Lengha1" type="checkbox"/>
-                                                <label class="border rounded text-capitalize" for="Lengha1">Lengha
-                                                <i for="foo" class="fa fa-check" aria-hidden="true"></i>                                                </label>
-                                            </span>
-                                        </div>
-                                        <div class="col-12 specifications-item col-sm-3 mt-sm-0 ">
-                                            <span>
-                                                <input id="2" type="checkbox"/>
-                                                <label class="border rounded text-capitalize" for="2">Lengha
-                                                <i for="foo" class="fa fa-check" aria-hidden="true"></i>                                                </label>
-                                            </span>
-                                        </div>
-                                        <div class="col-12 specifications-item col-sm-3 mt-sm-0 ">
-                                            <span>
-                                                <input id="3" type="checkbox"/>
-                                                <label class="border rounded text-capitalize" for="3">Lengha
-                                                <i for="foo" class="fa fa-check" aria-hidden="true"></i>                                                </label>
-                                            </span>
-                                        </div>
-                                        <div class="col-12 specifications-item col-sm-3 mt-sm-0 ">
-                                            <span>
-                                                <input id="4" type="checkbox"/>
-                                                <label class="border rounded text-capitalize" for="4">Lengha
-                                                <i for="foo" class="fa fa-check" aria-hidden="true"></i>                                                </label>
-                                            </span>
-                                        </div>
-                                        <div class="col-12 specifications-item col-sm-3 mt-sm-0 ">
-                                            <span>
-                                                <input id="5" type="checkbox"/>
-                                                <label class="border rounded text-capitalize" for="5">Lengha
-                                                <i for="foo" class="fa fa-check" aria-hidden="true"></i>                                                </label>
-                                            </span>
-                                        </div>
-                                        <div class="col-12 specifications-item col-sm-3 mt-sm-0 ">
-                                            <span>
-                                                <input id="5" type="checkbox"/>
-                                                <label class="border rounded text-capitalize" for="5">Lengha
-                                                <i for="foo" class="fa fa-check" aria-hidden="true"></i>                                                </label>
-                                            </span>
-                                        </div>
-                                        <div class="col-12 specifications-item col-sm-3 mt-sm-0 ">
-                                            <span>
-                                                <input id="6" type="checkbox"/>
-                                                <label class="border rounded text-capitalize" for="6">Lengha
-                                                <i for="foo" class="fa fa-check" aria-hidden="true"></i>                                                </label>
-                                            </span>
-                                        </div>
-                                        <div class="col-12 specifications-item col-sm-3 mt-sm-0 ">
-                                            <span>
-                                                <input id="67" type="checkbox"/>
-                                                <label class="border rounded text-capitalize" for="67">Lengha
-                                                <i for="foo" class="fa fa-check" aria-hidden="true"></i>                                                </label>
-                                            </span>
-                                        </div>
-
-
+                                    <?php endforeach; ?>
                                     </div>
                                         <div class="form-row mt-2">
                                             <div class="col-12 col-sm-12 mt-sm-0">
@@ -390,7 +328,7 @@
                                         <div class="row mt-2">
                                             <div class="col-md-5 d-flex">
                                                 <div style="font-size:20px;" class=" bg-success  
-                                                text-center mx-auto rounded-circle p-5 text-dark border-0" >₹500</div>
+                                                text-center mx-auto rounded-circle p-5 text-dark border-0" >₹<span id="final-price">0</span></div>
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="form-row mt-2">
@@ -427,3 +365,14 @@
 
 </body>
 <?php include 'includes/scripts.php' ?>
+<script>
+var final_price =0;
+$('.spec-item-js').change(function(){
+    final_price =0
+    $('.spec-item-js:checkbox:checked').each(function(){
+        final_price = final_price+parseInt($(this).data('price'));
+    })
+    $('#final-price').html(final_price);
+});
+
+</script>

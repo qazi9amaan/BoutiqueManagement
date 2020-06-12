@@ -1,25 +1,31 @@
 <fieldset>
     <div class="form-group">
-        <label for="category_base">Specification Name *</label>
-          <input type="text" name="category_base" value="<?php echo htmlspecialchars($edit ? $customer['category_base'] : '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="Specification Name " class="form-control" required="required" id = "category_base">
+        <label for="specification_name">Specification Name *</label>
+          <input type="text" name="specification_name" 
+          value="<?php echo htmlspecialchars($edit ? $specs['specification_name'] : '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="Specification Name " class="form-control" 
+          required="required" id = "specification_name">
     </div> 
 
     <div class="form-group">
-        <label for="category_name">Specification Price *</label>
-          <input type="text" name="category_name" value="<?php echo htmlspecialchars($edit ? $customer['category_name'] : '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="Specification Price " class="form-control" required="required" id = "category_name">
+        <label for="specification_price">Specification Price *</label>
+          <input type="text" name="specification_price" value="<?php echo htmlspecialchars($edit ? $specs['specification_price'] : '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="Specification Price " class="form-control" required="required" id = "specification_price">
+    </div> 
+  <?php if(!$edit){?>
+    <div class="form-group">
+        <label for="created_by">Uploaded By *</label>
+          <input type="text" name="created_by" value="<?php echo htmlspecialchars($edit ? $specs['created_by'] :  $_SESSION['staff_user_name'], ENT_QUOTES, 'UTF-8'); ?>" disabled class="form-control" required="required" id = "created_by">
     </div> 
     <div class="form-group">
-        <label for="category_name">Uploaded By *</label>
-          <input type="text" name="category_name" value="<?php echo htmlspecialchars($edit ? $customer['category_name'] :  $_SESSION['staff_user_name'], ENT_QUOTES, 'UTF-8'); ?>" disabled class="form-control" required="required" id = "category_name">
-    </div> 
-    <div class="form-group">
-        <label for="category_name">Uploaded on *</label>
-          <input type="date" name="category_name" disabled value="<?php echo htmlspecialchars($edit ? $customer['category_name'] : date('Y-m-d'), ENT_QUOTES, 'UTF-8'); ?>" placeholder="Specification Price " class="form-control" required="required" id = "category_name">
+        <label for="created_at">Uploaded on *</label>
+          <input type="date" name="created_at" disabled value="<?php echo htmlspecialchars($edit ? $specs['created_at'] : date('Y-m-d'), ENT_QUOTES, 'UTF-8'); ?>" placeholder="Specification Price " class="form-control" required="required" id = "created_at">
     </div> 
     
      <p><strong>Disclaimer:</strong> Please make sure to enter the correct information only.</p>
     <div class="form-group text-center">
         <label></label>
+        <a href="Specs.php" class="btn btn-outline-success" >Back </a>
         <button type="submit" class="btn btn-success" >Create </button>
     </div>
+
+  <?php }?>
 </fieldset>

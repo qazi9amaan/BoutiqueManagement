@@ -3,6 +3,11 @@
 <?php include PARENT .'/includes/header.php';?>
 <?php include PARENT .'/users/admin/includes/style-scripts.php';?>
 
+<?php
+    $db = getDbInstance();
+    $numSpecs = $db->getValue ("specifications", "count(*)");
+
+?>
 <body>
 <div class="wrapper">
     <?php include 'includes/navbar.php';?>
@@ -48,7 +53,7 @@
                                 <i class="fa fa-list"></i>
                             </div>
                             <div class="text-right">
-                                <h2>7</h2>
+                                <h2><?php echo $numSpecs;?></h2>
                             <p>Specifications</p>
                             </div>
                         </div>

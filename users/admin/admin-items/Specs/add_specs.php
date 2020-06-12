@@ -4,6 +4,26 @@
 <?php include PARENT .'/users/admin/includes/style-scripts.php';?>
 
 <?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') 
+{
+    $data_to_db = array_filter($_POST);
+    $data_to_db['created_by'] = $_SESSION['staff_user_id'];
+    $data_to_db['created_at'] = date('Y-m-d H:i:s');
+    $db = getDbInstance();
+    $last_id = $db->insert('specifications', $data_to_db);
+    if ($last_id)
+    {
+        $_SESSION['success'] = 'Specification added successfully!';
+        header('Location: add_specs.php');
+    	exit();
+    }
+    else
+    {
+        echo 'Insert failed: ' . $db->getLastError();
+        exit();
+    }
+}
+
     $edit= false;
 ?>
 
@@ -26,7 +46,7 @@
         <div class="container card">
                     <div class="row  ">
                         <div class="card-body">
-                            <!-- SEARCHING -->
+                            <!-- header -->
                             <div class=" d-flex pt-3  card-footer bg-primary text-white rounded border justify-content-between align-items-baseline ">
                                 <h4 class="text-uppercase  lead">Add a specification</h4>
                             </div>
