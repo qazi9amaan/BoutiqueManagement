@@ -5,6 +5,7 @@ define('BASE_PATH', dirname(dirname(__FILE__)));
 define("PARENT",     "/var/www/html");
 define('APP_FOLDER', 'splash-boutique');
 define('CURRENT_PAGE', basename($_SERVER['REQUEST_URI']));
+define("MAX_ORDERS_PER_DAY",  10);
 
 require_once BASE_PATH . '/lib/MysqliDb/MysqliDb.php';
 require_once BASE_PATH . '/helpers/helpers.php';

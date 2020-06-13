@@ -2,9 +2,12 @@
 <?php require_once 'libraries/config/config.php'; ?>
 <?php include 'includes/header.php'; ?>
 <?php
-
-$db = getDbInstance();
-$specs = $db->get('specifications');
+    $db = getDbInstance();
+    $specs = $db->get('specifications');
+    $max_delivery_date = $db->getValue('orders','MAX(delivery_date)');
+    $delivery_count = $db->where("delivery_date",$max_delivery_date)->getValue('orders','count(*)');
+    $delivery_date = $delivery_count < MAX_ORDERS_PER_DAY+1 ? $max_delivery_date : date('Y-m-d', strtotime($max_delivery_date. ' + 1 days'));
+    
 ?>
 
 <body class="bg-primary  d-flex flex-column  justify-content-center" >
@@ -77,7 +80,7 @@ $specs = $db->get('specifications');
         <div class="container">
             <div class="row">
                 <div class="col-12 p-5 mb-4 text-center">
-                    <a id="page-header" href="#" class="display-1  text-white text-hov-white">SPLASH </a>
+                    <a id="page-header" href="/index.php" class="display-1  text-white text-hov-white">SPLASH </a>
                 </div>
             </div>
             <div class="row ">
@@ -101,7 +104,7 @@ $specs = $db->get('specifications');
                        
                             <div style="margin-top: -30px;" class="row">
                             <div class="col-12 col-lg-10 m-auto">
-                                <form class="multisteps-form__form">
+                                <form method ="POST" enctype="multipart/form-data" action ="/libraries/helpers/save_order_details.php" class="multisteps-form__form">
                                     
                                 <!--CUSTOMER DETAILS-->
                                 <div class="multisteps-form__panel shadow p-5 rounded bg-white js-active" data-animation="scaleIn">
@@ -109,25 +112,25 @@ $specs = $db->get('specifications');
                                     <div class="multisteps-form__content">
                                     <div class="form-row mt-4">
                                             <div class="col-12 col-sm-6">
-                                                <input class="multisteps-form__input form-control " type="text" placeholder="Full Name"/>
+                                                <input class="multisteps-form__input form-control " name="cust_name" type="text" placeholder="Full Name"/>
                                             </div>
                                             <div class="col-12 col-sm-6 mt-2 mt-sm-0">
-                                                <input class="multisteps-form__input form-control " type="number" placeholder="Phone Number"/>
+                                                <input class="multisteps-form__input form-control " name="cust_phone_number" type="number" placeholder="Phone Number"/>
                                             </div>
                                            </div>
                                             <div class="form-row mt-2">
                                                 <div class="col-12 col-sm-12  mt-sm-0">
-                                                    <select class="form-control">
+                                                    <select name="cust_sex" class="form-control">
                                                         <option default>Choose gender</option>
-                                                        <option>Male</option>
-                                                        <option>Female</option>
+                                                        <option value="m">Male</option>
+                                                        <option value="f">Female</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="form-row mt-2">
                                             
                                             <div class="col-12 col-sm-12 mt-sm-0">
-                                                <textarea class="multisteps-form__input form-control " type="text" placeholder="Address" 
+                                                <textarea name="cust_address" class="multisteps-form__input form-control " type="text" placeholder="Address" 
                                                     rows="5"></textarea>
                                             </div>
                                             </div>
@@ -150,29 +153,31 @@ $specs = $db->get('specifications');
                                         </div>
 
                                         <div class="col-12 col-sm-8 mt-sm-0 p-2">
-                                            <div class="form-row mt-2">
-                                                <div class="col-12 col-sm-12 mt-sm-0">
-                                                <input class="multisteps-form__input form-control " 
-                                                type="text" placeholder="Product Color"/>
+                                            <div class="form-row">
+                                                <div class="col-12 col-sm-12 mt-sm-0 mt-0 pt-0">
+                                                <label class="text-primary" for="product-color">Product color</label>
+                                                <input class="multisteps-form__input form-control p-0" 
+                                                type="color" style="cursor:pointer"   name="product_color" id="product-color" placeholder="Product Color"/>
                                                 </div>
                                             </div>
                                         
                                             <div class="form-row mt-2">
                                                 <div class="col-12 col-sm-12 mt-sm-0">
                                                     <input class="multisteps-form__input form-control " 
-                                                    type="text" placeholder="Product length"/>
+                                                    type="text"  name="product_length"  placeholder="Product length"/>
                                                 </div>
                                             </div> 
 
                                             <div class="form-row mt-2">
                                                 <div class="col-12 col-sm-12 mt-sm-0">
                                                     <textarea class="multisteps-form__input form-control " 
-                                                    type="text" placeholder="Additional Remarks" 
-                                                    rows="5"></textarea>
+                                                    type="text" name="product_additional"  placeholder="Additional Remarks" 
+                                                    rows="3"></textarea>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="button-row d-flex mt-4">
                                         <button class="btn btn-outline-primary ml-3  mt-0 js-btn-prev" type="button" title="Prev">Prev</button>
                                         <button class="btn btn-success  ml-auto  js-btn-next" type="button" title="Next">Next</button>
@@ -187,21 +192,23 @@ $specs = $db->get('specifications');
                                     <div class="multisteps-form__content">
                                     <div class="form-row mt-4">
 
-                                    <?php foreach ($specs as $spec): ?>
+                                    <?php 
+                                     $counter=1;
+                                    foreach ($specs as $spec): ?>
 
 
                                         <div class="col-12 specifications-item col-sm-3 mt-sm-0 ">
                                             <span>
-                                                <input data-price="<?php echo $spec['specification_price'];?>" class="spec-item-js" id=" <?php echo $spec['specification_id'];?>" type="checkbox"/>
-                                                <label class="border rounded text-capitalize" for=" <?php echo $spec['specification_id'];?>"> <?php echo $spec['specification_name'];?>
+                                                <input value="<?php echo $spec['specification_id'];?>" name="specs[]" data-price="<?php echo $spec['specification_price'];?>" class="spec-item-js" id="<?php echo $spec['specification_id'];?>" type="checkbox"/>
+                                                <label class="border rounded text-capitalize" for="<?php echo $spec['specification_id'];?>"> <?php echo $spec['specification_name'];?>
                                             </span>
                                         </div>
-
+                                        <?php  $counter =  $counter +1;?>
                                     <?php endforeach; ?>
                                     </div>
                                         <div class="form-row mt-2">
                                             <div class="col-12 col-sm-12 mt-sm-0">
-                                                <textarea class="multisteps-form__input form-control " type="text" 
+                                                <textarea name="specs_additonal" class="multisteps-form__input form-control " type="text" 
                                                 placeholder="Additonal Specs?" 
                                                     rows="3"></textarea>
                                             </div>
@@ -219,48 +226,48 @@ $specs = $db->get('specifications');
                                     <div class="multisteps-form__content">
                                         <div class="form-row mt-4 ">
                                             <div class="form-group col-md-3 p-0">
-                                                <label for="pieces" class="mb-0" >No of Pieces</label>
-                                                <input type="number" class="form-control mt-0" id="pieces" placeholder="No of Pieces">
+                                                <label for="for="no_of_pieces""mb-0" >No of Pieces</label>
+                                                <input name="no_of_pieces" type="number" class="form-control mt-0" id="no_of_pieces" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-9 p-0 pl-2">
-                                                <label for="Embroidery" class="mb-0" >Embroidery</label>
-                                                <input type="text" class="form-control mt-0" id="pieces" placeholder="Embroidery">
+                                                <label for="embroidery" class="mb-0" >Embroidery</label>
+                                                <input name="embroidery" type="text" class="form-control mt-0" id="embroidery" placeholder="Embroidery">
                                             </div>
                                         </div>
                                     <!-- MEASUREMENTS SHIRT -->
                                     <small  class="form-text text-muted"> Measurements (Shirt)</small>
                                         <div class="form-row mt-2 ">
                                             <div class="form-group col-md-3 pl-2 p-0">
-                                                <label for="pieces" class="mb-0" >Length</label>
-                                                <input type="number" class="form-control mt-0" id="pieces" placeholder="No of Pieces">
+                                                <label for="upper_length" class="mb-0" >Length</label>
+                                                <input name="upper_length" type="number" class="form-control mt-0" id="upper_length" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-3 pl-2 p-0">
-                                                <label for="pieces" class="mb-0" >Chest</label>
-                                                <input type="number" class="form-control mt-0" id="pieces" placeholder="No of Pieces">
+                                                <label for="upper_chest" class="mb-0" >Chest</label>
+                                                <input name="upper_chest" type="number" class="form-control mt-0" id="upper_chest" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-3 pl-2 p-0">
-                                                <label for="pieces" class="mb-0" >Waist</label>
-                                                <input type="number" class="form-control mt-0" id="pieces" placeholder="No of Pieces">
+                                                <label for="upper_waist" class="mb-0" >Waist</label>
+                                                <input name="upper_waist" type="number" class="form-control mt-0" id="upper_waist" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-3 pl-2 p-0">
-                                                <label for="pieces" class="mb-0" >Hips</label>
-                                                <input type="number" class="form-control mt-0" id="pieces" placeholder="No of Pieces">
+                                                <label for="upper_hips" class="mb-0" >Hips</label>
+                                                <input name="upper_hips" type="number" class="form-control mt-0" id="upper_hips" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-3 pl-2 p-0">
-                                                <label for="pieces" class="mb-0" >Flair</label>
-                                                <input type="number" class="form-control mt-0" id="pieces" placeholder="No of Pieces">
+                                                <label for="upper_flair" class="mb-0" >Flair</label>
+                                                <input name="upper_flair" type="number" class="form-control mt-0" id="upper_flair" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-3 pl-2 p-0">
-                                                <label for="pieces" class="mb-0" >Hemline</label>
-                                                <input type="number" class="form-control mt-0" id="pieces" placeholder="No of Pieces">
+                                                <label for="upper_hemline" class="mb-0" >Hemline</label>
+                                                <input name="upper_hemline" type="number" class="form-control mt-0" id="upper_hemline" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-3 pl-2 p-0">
-                                                <label for="pieces" class="mb-0" >Sleeves</label>
-                                                <input type="number" class="form-control mt-0" id="pieces" placeholder="No of Pieces">
+                                                <label for="upper_sleeves" class="mb-0" >Sleeves</label>
+                                                <input name="upper_sleeves" type="number" class="form-control mt-0" id="upper_sleeves" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-3 pl-2 p-0">
-                                                <label for="pieces" class="mb-0" >Neck Line</label>
-                                                <input type="number" class="form-control mt-0" id="pieces" placeholder="No of Pieces">
+                                                <label forfor="upper_neck_line"s="mb-0" >Neck Line</label>
+                                                <input name="upper_neck_line" type="number" class="form-control mt-0" id="upper_neck_line" placeholder="No of Pieces">
                                             </div>
                                         </div>
 
@@ -282,31 +289,31 @@ $specs = $db->get('specifications');
                                         <small  class="form-text text-muted"> Measurements (Shalwar / Pants)</small>
                                         <div class="form-row mt-2 ">
                                             <div class="form-group col-md-3 pl-2 p-0">
-                                                <label for="pieces" class="mb-0" >Length</label>
-                                                <input type="number" class="form-control mt-0" id="pieces" placeholder="No of Pieces">
+                                                <label for="lower_length" class="mb-0" >Length</label>
+                                                <input name="lower_length" type="number" class="form-control mt-0" id="lower_length" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-3 pl-2 p-0">
-                                                <label for="pieces" class="mb-0" >Poocha</label>
-                                                <input type="number" class="form-control mt-0" id="pieces" placeholder="No of Pieces">
+                                                <label for="lower_poocha" class="mb-0" >Poocha</label>
+                                                <input name="lower_poocha" type="number" class="form-control mt-0" id="lower_poocha" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-3 pl-2 p-0">
-                                                <label for="pieces" class="mb-0" >Thy</label>
-                                                <input type="number" class="form-control mt-0" id="pieces" placeholder="No of Pieces">
+                                                <label for="lower_thy" class="mb-0" >Thy</label>
+                                                <input name="lower_thy" type="number" class="form-control mt-0" id="lower_thy" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-3 pl-2 p-0">
-                                                <label for="pieces" class="mb-0" >Waist</label>
-                                                <input type="number" class="form-control mt-0" id="pieces" placeholder="No of Pieces">
+                                                <label for="lower_waist" class="mb-0" >Waist</label>
+                                                <input name="lower_waist" type="number" class="form-control mt-0" id="lower_waist" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-3 pl-2 p-0">
-                                                <label for="pieces" class="mb-0" >Hips</label>
-                                                <input type="number" class="form-control mt-0" id="pieces" placeholder="No of Pieces">
+                                                <label for="lower_hips" class="mb-0" >Hips</label>
+                                                <input name="lower_hips" type="number" class="form-control mt-0" id="lower_hips" placeholder="No of Pieces">
                                             </div>
                                         </div>
                                         <small  class="form-text text-muted"> Additonal</small>
 
                                         <div class="form-row mt-2">
                                             <div class="col-12 col-sm-12 mt-sm-0">
-                                                <textarea class="multisteps-form__input form-control " type="text" placeholder="Additional" 
+                                                <textarea class="multisteps-form__input form-control " name="measurement_additonal" type="text" placeholder="Additional" 
                                                     rows="3"></textarea>
                                             </div>
                                             </div>
@@ -323,22 +330,40 @@ $specs = $db->get('specifications');
                                  <!-- COMPLETE ORDER -->
                                  <div  class="multisteps-form__panel shadow p-5 rounded bg-white" data-animation="scaleIn">
                                     <h3 class="multisteps-form__title mt-3">PLACE ORDER</h3>
-                                    <p>We are happy to see you here. </p>
+                                    <p class="text-primary">We are happy to see you here. </p>
                                     <div class="multisteps-form__content">
                                         <div class="row mt-2">
-                                            <div class="col-md-5 d-flex">
-                                                <div style="font-size:20px;" class=" bg-success  
-                                                text-center mx-auto rounded-circle p-5 text-dark border-0" >₹<span id="final-price">0</span></div>
+                                            <div class="col-md-5 border bg-success  border-success rounded d-flex">
+                                                <div style="font-size:30px;  font-weight:200" class=" bg-success  
+                                                text-center mx-auto   my-auto text-dark border-0" ><span class="final-price">0</span>/=</div>
                                             </div>
+                                            
                                             <div class="col-md-7">
-                                                <div class="form-row mt-2">
-                                                    <div class="col-12 col-sm-12">
-                                                        <input class="multisteps-form__input form-control " disabled value='<?php echo date('Y-m-d');?>' type="date" placeholder="Full Name"/>
+
+                                                <div class="form-row ">
+                                                    <div class="col-12 form-group  col-sm-12">
+                                                        <label class= "text-primary" for="order_date">Order Date</label>
+                                                        <input id="order_date" class="multisteps-form__input form-control " disabled value='<?php echo date('Y-m-d');?>' type="date" placeholder="Full Name"/>
                                                     </div>
                                                  </div>
-                                                 <div class="form-row mt-1">
+
+                                                 <div class="form-row ">
+                                                    <div class="col-12 form-group  col-sm-12">
+                                                        <label class= "text-primary" for="delivery_date">Delivery Date</label>
+                                                        <input id="delivery_date" name="delivery_date" class="multisteps-form__input form-control " value="<?php echo $delivery_date;?>" type="date" placeholder="Full Name"/>
+                                                    </div>
+                                                 </div>
+
+                                                 <div class="form-row  form-group mt-1">
                                                     <div class="col-12 col-sm-12">
-                                                        <input class="multisteps-form__input form-control " type="text" placeholder="Discount"/>
+                                                         <label class="text-primary" for="order_price">Order final price</label>
+                                                        <input name="order_price" id="order_price"  class="multisteps-form__input form-control" type="number" placeholder="Final Price"/>
+                                                    </div>
+                                                 </div>
+                                                 <div class="form-row  form-group mt-1">
+                                                    <div class="col-12 col-sm-12">
+                                                         <label class="text-primary" for="advance_money">Advance</label>
+                                                        <input name="advance_money" id="advance_money" class="multisteps-form__input form-control" type="number" placeholder="Advance Recieved"/>
                                                     </div>
                                                  </div>
                                             </div>
@@ -346,7 +371,7 @@ $specs = $db->get('specifications');
                                         </div>
                                         <div class="button-row d-flex mt-4">
                                             <button class="btn btn-outline-primary   mt-0 js-btn-prev" type="button" title="Prev">Prev</button>
-                                            <button class="btn btn-success  ml-auto  js-btn-next" type="button" title="Next">Place Order</button>
+                                            <button class="btn btn-success  ml-auto" type="submit" title="Complete order">Place Order</button>
                                         </div>
                                     </div>
                                 </div>
@@ -372,7 +397,20 @@ $('.spec-item-js').change(function(){
     $('.spec-item-js:checkbox:checked').each(function(){
         final_price = final_price+parseInt($(this).data('price'));
     })
-    $('#final-price').html(final_price);
+    $('#order_price').val(final_price);
+    $('.final-price').html(final_price);
 });
+$('#order_price').change(function(){
+    if(this.value <final_price){
+        if(confirm("Are you sure to go with this price?")){
+            $('.final-price').html(this.value);
+        }else{
+            $('#order_price').val(final_price);
+             $('.final-price').html(final_price);
+        }
+    }
+   
+})
 
 </script>
+
