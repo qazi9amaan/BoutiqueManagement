@@ -18,7 +18,17 @@
                 </a>
             </li>
 
-            <li><a class=" streched-link" href="#"><i class="fas fa-address-card"></i>About</a></li>
+            <li
+            <?php echo (CURRENT_PAGE == 'Customers.php' || CURRENT_PAGE == 'add_add_cust.php') ? 'class="active"' : ''; ?>
+            ><a class=" streched-link" href="/users/admin/admin-items/Customers/Customers.php">
+            <i class="fa fa-user-circle-o"></i>&nbsp; Customers</a></li>
+
+            <li
+            <?php echo (CURRENT_PAGE == 'New-Orders.php' ) ? 'class="active"' : ''; ?>
+            ><a class=" streched-link" href="/users/admin/admin-items/Orders/New-Orders.php">
+            <i class="fa fa-shopping-bag"></i>&nbsp; New Orders</a></li>
+
+
             <li><a class=" streched-link" href="#"><i class="fas fa-project-diagram"></i>portfolio</a></li>
             <li><a class=" streched-link" href="#"><i class="fas fa-blog"></i>Blogs</a></li>
             <li><a class=" streched-link" href="#"><i class="fas fa-address-book"></i>Contact</a></li>

@@ -135,3 +135,68 @@ a:hover {
     padding: 15px;
     font-size: 55px;
 }
+
+.bg-red-light {
+    background: #d9534f;
+}
+
+.bg-red-light .panel-item>* {
+    color: #fafafa;
+    fill: #fafafa;
+    font-family: Helvetica, Arial, sans-serif;
+    opacity: 1;
+}
+
+.bg-red-light .panel-item i {
+    color: #fafafa;
+}
+
+.bg-red-light .card-footer {
+    background: #d9534f;
+}
+
+.bg-red-light .card-footer:hover {
+    background: #c24944;
+}
+
+.bg-red-light .card-footer a {
+    color: #fff;
+}
+
+.border-light-red {
+    border: 1px solid #9e0322;
+    border-radius: 0.25rem;
+}
+
+.bg-yellow-light {
+    background: #ffc107;
+}
+
+.bg-yellow-light .panel-item>* {
+    color: #1f2d3d;
+    fill: #1f2d3d;
+    font-family: Helvetica, Arial, sans-serif;
+    opacity: 1;
+}
+
+.bg-yellow-light .panel-item i {
+    color: #1f2d3d;
+}
+
+.bg-yellow-light .card-footer {
+    background: rgba(0, 0, 0, .1);
+    ;
+}
+
+.bg-yellow-light .card-footer:hover {
+    background: rgba(0, 0, 0, .2);
+}
+
+.bg-yellow-light .card-footer a {
+    color: #333;
+}
+
+.border-light-yellow {
+    border: 1px solid #ffc107;
+    border-radius: 0.25rem;
+}

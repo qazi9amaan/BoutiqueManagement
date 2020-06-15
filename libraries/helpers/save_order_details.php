@@ -68,7 +68,7 @@
                     { 
 
                         $_SESSION['success'] = 'Order placed succcessfully!';
-                        header('Location: /index.php');
+                        header('Location: /orders/complete-order-noti.php?q=success');
                         exit();
                     }else{
                         $db->where('product_id',$product_id)->delete('products');

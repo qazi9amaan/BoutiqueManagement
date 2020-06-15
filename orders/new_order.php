@@ -1,6 +1,6 @@
 <?php session_start(); ?>
-<?php require_once 'libraries/config/config.php'; ?>
-<?php include 'includes/header.php'; ?>
+<?php require_once '../libraries/config/config.php'; ?>
+<?php include '../includes/header.php'; ?>
 <?php
     $db = getDbInstance();
     $specs = $db->get('specifications');
@@ -104,7 +104,7 @@
                        
                             <div style="margin-top: -30px;" class="row">
                             <div class="col-12 col-lg-10 m-auto">
-                                <form method ="POST" enctype="multipart/form-data" action ="/libraries/helpers/save_order_details.php" class="multisteps-form__form">
+                                <form method ="POST" enctype="multipart/form-data" action ="../libraries/helpers/save_order_details.php" class="multisteps-form__form">
                                     
                                 <!--CUSTOMER DETAILS-->
                                 <div class="multisteps-form__panel shadow p-5 rounded bg-white js-active" data-animation="scaleIn">
@@ -121,9 +121,9 @@
                                             <div class="form-row mt-2">
                                                 <div class="col-12 col-sm-12  mt-sm-0">
                                                     <select name="cust_sex" class="form-control">
-                                                        <option default>Choose gender</option>
+                                                    <option default value="f">Female</option>
+
                                                         <option value="m">Male</option>
-                                                        <option value="f">Female</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -226,7 +226,7 @@
                                     <div class="multisteps-form__content">
                                         <div class="form-row mt-4 ">
                                             <div class="form-group col-md-3 p-0">
-                                                <label for="for="no_of_pieces""mb-0" >No of Pieces</label>
+                                                <label for="no_of_pieces" >No of Pieces</label>
                                                 <input name="no_of_pieces" type="number" class="form-control mt-0" id="no_of_pieces" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-9 p-0 pl-2">
@@ -389,7 +389,7 @@
 
 
 </body>
-<?php include 'includes/scripts.php' ?>
+<?php include '../includes/scripts.php' ?>
 <script>
 var final_price =0;
 $('.spec-item-js').change(function(){
@@ -408,9 +408,13 @@ $('#order_price').change(function(){
             $('#order_price').val(final_price);
              $('.final-price').html(final_price);
         }
+    }else{
+        $('#order_price').val(this.value);
+             $('.final-price').html(this.value);
     }
    
 })
 
 </script>
+
 
