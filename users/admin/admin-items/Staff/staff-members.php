@@ -2,8 +2,8 @@
 <?php require_once '/var/www/html/libraries/config/config.php';?>
 
 <?php
-    require_once PARENT . '/users/admin/lib/Customers/Customer.php';
-    $customer = new Customers();
+    require_once PARENT . '/users/admin/lib/Staff/Staff.php';
+    $order = new staff();
     
     $order_by	= filter_input(INPUT_GET, 'order_by');
     $order_dir	= filter_input(INPUT_GET, 'order_dir');
@@ -15,7 +15,7 @@
         $page = 1;
     }
     if (!$order_by) {
-        $order_by = 'cust_id';
+        $order_by = 'id';
     }
     if (!$order_dir) {
         $order_dir = 'Desc';
@@ -23,17 +23,17 @@
 
     $db = getDbInstance();
     if ($search_str) {
-        $db->where('cust_name', '%' . $search_str . '%', 'like');
-        $db->orwhere('cust_phone_number', '%' . $search_str . '%', 'like');
+        $db->where('full_name', '%' . $search_str . '%', 'like');
+        $db->orwhere('phone_number', '%' . $search_str . '%', 'like');
 
     }
 
     if ($order_dir) {
         $db->orderBy($order_by, $order_dir);
     }
-    $select = array('cust_id', 'cust_name', 'cust_phone_number', 'cust_address', 'created_at','cust_sex');
+    $select = array('id','phone_number','full_name','address','adhaar_card','created_at','account_type','staff_salary');
     $db->pageLimit = $pagelimit;
-    $rows = $db->arraybuilder()->paginate('customer', $page, $select);
+    $rows = $db->arraybuilder()->paginate('staff_accounts', $page, $select);
     $total_pages = $db->totalPages;
 ?>
 
@@ -48,10 +48,10 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb p-0 m-0 bg-white">
                     <li class="breadcrumb-item"><a href="/users/admin">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Customers</li>
+                    <li class="breadcrumb-item active" aria-current="page">Staff Members</li>
                 </ol>
             </nav>
-            <a href="add_cust.php" title="Add a new Specification" class="btn-primary  btn-sm"><i class="fa fa-plus"></i> Add New</a>
+            <a href="add_staff.php" title="Add a new Specification" class="btn-primary  btn-sm"><i class="fa fa-plus"></i> Add Staff</a>
         </div>  
 
 
@@ -61,7 +61,7 @@
                     <div class="card-body">
                          <!-- SEARCHING -->
                         <div class=" d-flex pt-3  card-footer bg-primary text-white rounded border justify-content-between align-items-baseline ">
-                            <h4 class="text-uppercase  lead">Customers</h4>
+                            <h4 class="text-uppercase  lead">Staff Members</h4>
                         </div>
                         <!-- SEARCHING -->
                         <div class="card-header mx-auto d-flex rounded justify-content-center text-center border mt-3">
@@ -72,7 +72,7 @@
                                         <label class="mx-1 " for="input_order">Order By</label>
                                         <select name="order_by" class="form-control">
                                             <?php
-                                        foreach ($customer->setOrderingValues() as $opt_value => $opt_name):
+                                        foreach ($order->setOrderingValues() as $opt_value => $opt_name):
                                             ($order_by === $opt_value) ? $selected = 'selected' : $selected = '';
                                             echo ' <option value="' . $opt_value . '" ' . $selected . '>' . $opt_name . '</option>';
                                         endforeach;
@@ -106,36 +106,43 @@
                         <table class="table bg-white table-bordered  table-sm  ">
                             <thead class="thead-light">
                             <tr >
-                                    <th width="5%" class="w-5">Id</th>
-                                    <th width="20%" class="w-20">Name</th>
-                                    <th width="3%" class="w-3">Sex</th>
-                                    <th width="12%" class="w-12">Phone</th>
-                                    <th width="39%" class="w-39">Address</th>
-                                    <th width="20%" class="w-20">Action</th>
+                                    <th width="" class=""> Id</th>
+                                    <th width="" class="">Name</th>
+                                    <th width="" class="">Address</th>
+                                    <th width="" class="">Phone</th>
+                                    <th width="" class="">Adhaar</th>
+                                    <th width="" class="">Joined At</th>
+                                    <th width="" class="">Position</th>
+                                    <th width="" class="">Saralry</th>
+                                    <th width="" class="">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                             <?php foreach ($rows as $row): ?>
                             <?php
                                 $edit = true;
-                                $cust = $row;
+                                $staff = $row;
                             ?>
                                 <tr>
-                                    <td><?php echo htmlspecialchars($row['cust_id']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['cust_name']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['cust_sex']); ?></td>
-                                    <td ><?php echo htmlspecialchars($row['cust_phone_number']); ?> </td>
-                                    <td ><?php echo htmlspecialchars($row['cust_address']); ?> </td>
+                                    <td><?php echo htmlspecialchars($row['id']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['full_name']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['address']); ?></td>
+                                    <td ><?php echo htmlspecialchars($row['phone_number']); ?> </td>
+                                    <td ><?php echo htmlspecialchars($row['adhaar_card']); ?> </td>
+                                    <td ><?php echo date('j F Y', strtotime($row['created_at'])); ?> </td>
+                                    <td ><?php echo htmlspecialchars($row['account_type']); ?> </td>
+                                    <td ><?php echo htmlspecialchars($row['staff_salary']); ?> </td>
+
+
                                     <td >
-                                        <button  data-toggle="modal" data-target="#edit-customer-<?php echo $row['cust_id']; ?>" class="btn btn-success btn-sm mx-2 mt-md-0 mt-1 "><i class="fa fa-pencil"></i> Change  </button>
-                                        <button  data-toggle="modal" data-target="#delete-customer-<?php echo $row['cust_id']; ?>" class="btn btn-danger btn-sm mx-2 ml-md-0 mt-md-0  mt-1"><i class="fa fa-times"></i> Delete</button>
-                                        <a href="/users/customers/account.php?id=<?php echo $row['cust_id']; ?>" class="btn btn-primary btn-sm mx-2 ml-md-0 mt-md-0  mt-1"><i class="fa fa-user"></i>  Profile</a>
+                                        <button  data-toggle="modal" data-target="#edit-staff-<?php echo $row['id']; ?>" class="btn btn-success btn-sm mx-2 mt-md-0 mt-1 "><i class="fa fa-pencil"></i> Change  </button>
+                                        <button  data-toggle="modal" data-target="#delete-staff-<?php echo $row['id']; ?>" class="btn btn-danger btn-sm mx-2 ml-md-0 mt-md-0  mt-1"><i class="fa fa-times"></i> Delete</button>
 
                                     </td>
                                 </tr>
-                                <div class="modal fade" id="delete-customer-<?php echo $row['cust_id']; ?>" role="dialog">
+                                <div class="modal fade" id="delete-staff-<?php echo $row['id']; ?>" role="dialog">
                                     <div class="modal-dialog">
-                                        <form action="/users/admin/admin-items/Customers/delete.php" method="POST">
+                                        <form action="/users/admin/admin-items/Staff/delete.php" method="POST">
                                             <!-- Modal content -->
                                             <div class="modal-content">
                                                 <div class="modal-header ">
@@ -143,11 +150,11 @@
                                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                 </div>
                                                 <div class="modal-body mb-0 pb-0">
-                                                    <input hidden name="cust_id" value="<?php echo $row['cust_id']; ?>">
+                                                    <input hidden name="id" value="<?php echo $row['id']; ?>">
 
-                                                    <p class="text-center"> Are you sure you want to delete this customer?<br>
+                                                    <p class="text-center"> Are you sure you want to delete this staff member?<br>
                                                    <i class="fa fa-arrow-circle-o-right"></i>
-                                                    Deleting <strong><?php echo htmlspecialchars($row['cust_name']); ?></strong>
+                                                    Deleting <strong><?php echo htmlspecialchars($row['full_name']); ?></strong>
                                                     </p>
                                                 </div>
                                                 <div class="modal-footer">
@@ -158,17 +165,17 @@
                                         </form>
                                     </div>
                                 </div>
-                                <div class="modal fade" id="edit-customer-<?php echo $row['cust_id']; ?>" role="dialog">
+                                <div class="modal fade" id="edit-staff-<?php echo $row['id']; ?>" role="dialog">
                                     <div class="modal-dialog">
-                                        <form action="/users/admin/admin-items/Customers/edit.php" method="POST">
+                                        <form action="/users/admin/admin-items/Staff/edit.php" method="POST">
                                             <div class="modal-content">
                                                 <div class="modal-header ">
-                                                    <a>Edit <?php echo htmlspecialchars($row['cust_name']); ?> </a>
+                                                    <a>Edit <?php echo htmlspecialchars($row['full_name']); ?> </a>
                                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                 </div>
                                                 <div class="modal-body mb-0 pb-0">
-                                                <input type="text" hidden name="cust_id" value="<?php echo htmlspecialchars($row['cust_id']); ?>">
-                                                    <?php include PARENT.'/users/admin/forms/customer_form.php'; ?>
+                                                <input type="text" hidden name="id" value="<?php echo htmlspecialchars($row['id']); ?>">
+                                                    <?php include PARENT.'/users/admin/forms/staff_form.php'; ?>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-outline-success" data-dismiss="modal">Cancel</button>

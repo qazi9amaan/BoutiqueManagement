@@ -19,14 +19,24 @@
             </li>
 
             <li
-            <?php echo (CURRENT_PAGE == 'Customers.php' || CURRENT_PAGE == 'add_add_cust.php') ? 'class="active"' : ''; ?>
+            <?php echo (CURRENT_PAGE == 'Customers.php' || CURRENT_PAGE == 'add_cust.php') ? 'class="active"' : ''; ?>
             ><a class=" streched-link" href="/users/admin/admin-items/Customers/Customers.php">
             <i class="fa fa-user-circle-o"></i>&nbsp; Customers</a></li>
 
             <li
             <?php echo (CURRENT_PAGE == 'New-Orders.php' ) ? 'class="active"' : ''; ?>
             ><a class=" streched-link" href="/users/admin/admin-items/Orders/New-Orders.php">
-            <i class="fa fa-shopping-bag"></i>&nbsp; New Orders</a></li>
+            <i class="fa fa-shopping-cart"></i>&nbsp; New Orders</a></li>
+
+            <li
+            <?php echo (CURRENT_PAGE == 'Processing-Orders.php') ? 'class="active"' : ''; ?>
+            ><a class=" streched-link" href="/users/admin/admin-items/Orders/Processing-Orders.php">
+            <i class="fa fa-hourglass-start"></i>&nbsp; Processing Order</a></li>
+            
+            <li
+            <?php echo (CURRENT_PAGE == 'staff-members.php' || CURRENT_PAGE == 'add_staff.php' ) ? 'class="active"' : ''; ?>
+            ><a class=" streched-link" href="/users/admin/admin-items/Staff/staff-members.php">
+            <i class="fa fa-building-o"></i>&nbsp; Staff Members</a></li>
 
 
             <li><a class=" streched-link" href="#"><i class="fas fa-project-diagram"></i>portfolio</a></li>

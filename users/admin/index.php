@@ -7,7 +7,10 @@
     $db = getDbInstance();
     $numSpecs = $db->getValue ("specifications", "count(*)");
     $numcust = $db->getValue ("customer", "count(*)");
-    $numorders =$db->getValue ("orders", "count(*)");
+    $numorders =$db->where('order_status','new')->getValue ("orders", "count(*)");
+    $numProcessingorders =$db->where('order_status','assigned')->getValue ("orders", "count(*)");
+
+    $numstaff =$db->getValue ("staff_accounts", "count(*)");
 ?>
 <body>
 <div class="wrapper">
@@ -76,7 +79,7 @@
 
                  <!-- CUSTOMERS -->
                  <div class="col-md-3 mb-3">
-                    <div class="card border-primary  bg-green-light">
+                    <div class="card border-light-green-2  bg-green-light-2">
                         <div class="card-header border-0 p-3 ">
                         <div class=" panel-item d-flex justify-content-between">
                             <div class=" text-center">
@@ -99,12 +102,12 @@
                 </div>
 
                    <!-- NEW ORDERS -->
-                   <div class="col-md-3 mb-3">
+                <div class="col-md-3 mb-3">
                     <div class="card border-light-yellow bg-yellow-light">
                         <div class="card-header border-0 p-3 ">
                         <div class=" panel-item d-flex justify-content-between">
                             <div class=" text-center">
-                                <i class="fa fa-shopping-bag"></i>
+                                <i class="fa fa-shopping-cart"></i>
                             </div>
                             <div class="text-right">
                                 <h2><?php echo $numorders;?></h2>
@@ -121,7 +124,65 @@
                         </div>
                     </div>
                 </div>
+                
+                  <!-- STAFF -->
+                  <div class="col-md-3 mb-3">
+                    <div class="card border-light-blue bg-blue-light">
+                        <div class="card-header border-0 p-3 ">
+                        <div class=" panel-item d-flex justify-content-between">
+                            <div class=" text-center">
+                                <i class="fa fa-building-o"></i>
+                            </div>
+                            <div class="text-right">
+                                <h2><?php echo $numstaff;?></h2>
+                            <p>STAFF MEMBERS</p>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="card-footer  mt-0  ">
+                            <a class="d-flex justify-content-between" 
+                            href="/users/admin/admin-items/Staff/staff-members.php"> 
+                            <span>View all staff members</span>
+                            <i class="fa fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
+                
+            </div>
+
+
+            <div class="row ">
+                <div class="mb-3 col-12">
+                </div>
+                <!-- UNDER PROCESS -->
+                <div class="col-md-3 mb-3">
+                    <div class="card border-light-blue-2  bg-blue-light-2">
+                        <div class="card-header border-0 p-3 ">
+                        <div class=" panel-item d-flex justify-content-between">
+                            <div class=" text-center">
+                                <i class="fa fa-hourglass-start"></i>
+                            </div>
+                            <div class="text-right">
+                                <h2><?php echo $numProcessingorders;?></h2>
+                            <p>Processing Orders</p>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="card-footer  mt-0  ">
+                            <a class="d-flex justify-content-between" 
+                            href="/users/admin/admin-items/Orders/Processing-Orders.php"> 
+                            <span>View all orders under process</span>
+                            <i class="fa fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+
+                
             </div>
 
         </div>

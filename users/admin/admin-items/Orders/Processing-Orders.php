@@ -34,8 +34,8 @@
     $select = array('s.full_name','c.cust_name', 'c.cust_id', 'c.cust_phone_number', 'o.order_id', 'o.ordered_at', 'o.order_price',	'o.order_taken_by' 	,'o.advance_money' 	,'o.delivery_date');
     $db->pageLimit = $pagelimit;
     $db->join("customer c", "c.cust_id=o.cust_id", "LEFT");
-    $db->join("staff_accounts s", "s.id=o.order_taken_by", "LEFT");
-    $db->where('order_status','new');
+    $db->join("staff_accounts s", "s.id=o.artisen_assigned", "LEFT");
+    $db->where('order_status','assigned');
     $rows = $db->arraybuilder()->paginate('orders o', $page, $select);
     $total_pages = $db->totalPages;
 
@@ -56,10 +56,10 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb p-0 m-0 bg-white">
                     <li class="breadcrumb-item"><a href="/users/admin">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">New Orders</li>
+                    <li class="breadcrumb-item active" aria-current="page"> Processing Orders</li>
                 </ol>
             </nav>
-            <a href="/new_order.php" title="Add a new Specification" class="btn-primary  btn-sm"><i class="fa fa-plus"></i> Place a new Order</a>
+            <a href="/new_order.php" title="Assign artisen to an order" class="btn-primary  btn-sm"><i class="fa fa-plus"></i>&nbsp;Assign artisen to an order</a>
         </div>  
 
 
@@ -69,7 +69,7 @@
                     <div class="card-body">
                          <!-- SEARCHING -->
                         <div class=" d-flex pt-3  card-footer bg-primary text-white rounded border justify-content-between align-items-baseline ">
-                            <h4 class="text-uppercase  lead">New Orders</h4>
+                            <h4 class="text-uppercase  lead">Order being processed</h4>
                         </div>
                         <!-- SEARCHING -->
                         <div class="card-header mx-auto d-flex rounded justify-content-center text-center border mt-3">
@@ -117,12 +117,11 @@
                                     <th width="" class=""> Id</th>
                                     <th width="" class="">Name</th>
                                     <th width="" class="">Number</th>
-                                    <th width="" class="">Taken By</th>
+                                    <th width="" class="">Aristen Assigned</th>
                                     <th width="" class="">price</th>
                                     <th width="" class="">Ordered at</th>
                                     <th width="" class="">Advance</th>
                                     <th width="" class="">Delievery</th>
-                                    <th width="" class="">Pending</th>
                                     <th width="" class="">Action</th>
                                 </tr>
                             </thead>
@@ -141,64 +140,11 @@
                                     <td ><?php echo htmlspecialchars($row['ordered_at']); ?> </td>
                                     <td ><?php echo htmlspecialchars($row['advance_money']); ?> </td>
                                     <td ><?php echo htmlspecialchars($row['delivery_date']); ?> </td>
-                                    <td ><?php echo htmlspecialchars((float)$row['order_price']-(float)$row['advance_money']); ?> </td>
-
                                     <td >
-                                        <button  data-toggle="modal" data-target="#edit-order-<?php echo $row['order_id']; ?>" class="btn btn-success btn-sm mx-2 mt-md-0 mt-1 "><i class="fa fa-pencil"></i> Change  </button>
-                                        <button  data-toggle="modal" data-target="#delete-order-<?php echo $row['order_id']; ?>" class="btn btn-danger btn-sm mx-2 ml-md-0 mt-md-0  mt-1"><i class="fa fa-times"></i> Delete</button>
-                                        <a href="/orders/complete-order-noti.php?order=<?php echo htmlspecialchars($row['order_id']); ?>" class="btn btn-sm btn-outline-primary"><i class="fa fa-print">&nbsp;View/Print</i></a>
-                                        <button data-order_id="<?php echo $row['order_id']; ?>" data-toggle="modal" data-target="#assign-artisen-to-order" class="btn btn-primary btn-sm mx-2 ml-md-0 mt-md-0  mt-1"><i class="fa fa-user-circle"></i>  Assign Artisen</button>
+                                        <a href="/orders/complete-order-noti.php?order=<?php echo htmlspecialchars($row['order_id']); ?>" class="btn btn-primary btn-sm"><i class="fa fa-print">&nbsp;View/Print</i></a>
+                                        <button data-order_id="<?php echo $row['order_id']; ?>" data-toggle="modal" data-target="#assign-artisen-to-order" class="btn btn-success btn-sm mx-2 ml-md-0 mt-md-0  mt-1"><i class="fa fa-pencil"></i>  Change Artisen</button>
                                     </td>
                                 </tr>
-                                
-                                <div class="modal fade" id="delete-order-<?php echo $row['order_id']; ?>" role="dialog">
-                                    <div class="modal-dialog">
-                                        <form action="/orders/delete_order.php?r=/users/admin/admin-items/Orders/New-Orders.php" method="POST">
-                                            <!-- Modal content -->
-                                            <div class="modal-content">
-                                                <div class="modal-header ">
-                                                    <a>Confirmination </a>
-                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                </div>
-                                                <div class="modal-body mb-0 pb-0">
-                                                    <input hidden name="order_id" value="<?php echo $row['order_id']; ?>">
-
-                                                    <p class="text-center"> Are you sure you want to delete this order?<br>
-                                                   <i class="fa fa-arrow-circle-o-right"></i>
-                                                    Deleting <strong> OR-<?php echo htmlspecialchars($row['order_id']); ?></strong>
-                                                    </p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-outline-success" data-dismiss="modal">No</button>
-                                                    <button type="submit" class="btn btn-success pull-left">Proceed</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            
-
-                                <div class="modal fade" id="edit-customer-<?php echo $row['cust_id']; ?>" role="dialog">
-                                    <div class="modal-dialog">
-                                        <form action="/users/admin/admin-items/Customers/edit.php" method="POST">
-                                            <div class="modal-content">
-                                                <div class="modal-header ">
-                                                    <a>Edit <?php echo htmlspecialchars($row['cust_name']); ?> </a>
-                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                </div>
-                                                <div class="modal-body mb-0 pb-0">
-                                                <input type="text" hidden name="cust_id" value="<?php echo htmlspecialchars($row['cust_id']); ?>">
-                                                    <?php include PARENT.'/users/admin/forms/customer_form.php'; ?>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-outline-success" data-dismiss="modal">Cancel</button>
-                                                    <button type="submit" class="btn btn-success pull-left"><i class="fa fa-pencil"></i> Change</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
@@ -224,9 +170,9 @@
                 <div class="modal-body mb-0 pb-0">
                     <input hidden name="order_id" id="art-order-id-ini">
 
-                    <p class="text-center"> Are you sure you want to assign this order to this artisen?<br>
+                    <p class="text-center"> Are you sure you want to change the artisen assigned?<br>
                     <i class="fa fa-arrow-circle-o-right"></i>
-                    Assigning to <strong> OR- <span id="art-order-id"></span></strong>
+                    Assigning new artisen to <strong> OR- <span id="art-order-id"></span></strong>
                     
                     <div class="form-group">
                         <select name="artisen_assigned" class="form-control" id="artisen_assigned">
