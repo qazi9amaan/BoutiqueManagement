@@ -49,6 +49,10 @@
                 
                 if ($measurement_id)
                 { 
+                    // DEFAULT MEASUREMNETS
+                    $data_meas_cust['measurement_id'] = $measurement_id;
+                    $cust_bol = $db->where('cust_id',$cust_id)->update('customer', $data_meas_cust);
+
 
                     $data_order["additionals"]= $data['product_additional'].' '. $data['measurement_additonal'].' '. $data['specs_additonal'];
                     $data_order["cust_id"] = $cust_id;
@@ -68,7 +72,7 @@
                     { 
 
                         $_SESSION['success'] = 'Order placed succcessfully!';
-                        header('Location: /orders/complete-order-noti.php?q=success');
+                        header('Location: /orders/complete-order-noti.php?q=success&order='.$order_id);
                         exit();
                     }else{
                         $db->where('product_id',$product_id)->delete('products');

@@ -1,6 +1,22 @@
 <?php session_start(); ?>
 <?php require_once '../libraries/config/config.php'; ?>
 <?php include '../includes/header.php'; ?>
+
+<?php
+    if(isset($_GET['order'])){
+        $db = getDbInstance();
+        $customer=$db->where('order_id',$_GET['order'])->getOne('orders');
+        $customer+=$db->where('cust_id', $customer['cust_id'])->getOne('customer');
+        $customer+=$db->where('product_id', $customer['product_id'])->getOne('products');
+        $specs = $db->where('specification_id',explode(",",$customer['specifications']), 'IN')->get('specifications');
+        $total_spec_price = $db->where('specification_id',explode(",",$customer['specifications']), 'IN')->getValue('specifications','SUM(specification_price)');
+        $measurement=$db->where('id', $customer['measurement_id'])->getOne('measurements');
+
+    }    
+
+?>
+
+
 <style>
  #page-header{
         letter-spacing: 7px;
@@ -33,8 +49,11 @@
     <div class="container-fluid ">
     <div class="row ml-auto">
     <div  class="noprint  ml-auto pr-3 py-2  ">
-            <a href="/index" class="btn btn-success">Home </a>
-            <a class="btn btn-success" id="print-bill-btn">Print</a>            
+            <a href="/index.php" class="btn btn-success">Home </a>
+            <a class="btn btn-success" id="print-bill-btn">Print Bill</a>            
+            <a class="btn btn-success" id="print-info-btn">Print Info</a> 
+            <a class="btn btn-success" id="print-all-btn">Print All</a>
+          
         </div>
     </div>
 
@@ -51,13 +70,13 @@
                 <div class="card-body">
                     <div class="d-flex  justify-content-between align-items-center">
                       <small>  <span>
-                            <span class=""> No.</span>
-                            <span class=" font-weight-bold">10</span>
+                            <span class=""> Od No.</span>
+                            <span class=" font-weight-bold">#<?php echo $customer['order_id'];?></span>
                         </span></small>
                        <small>
                        <span>
                             <span class=""> Dated.</span>
-                            <span class=" font-weight-bold"><?php echo date('d-m-y')?></span>
+                            <span class=" font-weight-bold"><?php echo $customer['ordered_at'];?></span>
                         </span>
                        </small>
                     </div>
@@ -65,12 +84,12 @@
                        <small>
                        <span>
                             <span class=""> M/s</span>&nbsp;
-                            <span class=" font-weight-bold">Qazi Amaan yousuf</span>
+                            <span class=" font-weight-bold"><?php echo $customer['cust_name'];?></span>
                         </span>
                        </small>
                         <small>
                             <span class=""> Delivery.</span>
-                            <span class=" font-weight-bold">22-06-20</span>
+                            <span class=" font-weight-bold"><?php echo $customer['delivery_date'];?></span>
                        </small>
                         
                     </div>
@@ -85,11 +104,11 @@
                         <div class="d-flex my-2   justify-content-between  align-items-center">
                             <span>
                                 <span class=""> Color</span>
-                            <span style="background:#999" class="p-0 ml-2 rounded px-5 border"></span>
+                            <span style="background:<?php echo $customer['product_color'];?>" class="p-0 ml-2 rounded px-5 border"></span>
                             </span>
                             <span>
                                 <span class=""> Length.</span>
-                                <span class=" font-weight-light">10m</span>
+                                <span class=" font-weight-light"><?php echo $customer['product_length'];?></span>
                             </span>
                         </div>
                     </small>
@@ -97,65 +116,53 @@
                     <!-- SPECS -->
                     <small class="font-weight-bold">Specifications</small>
                     <small>
+                    <?php 
+                        $counter =1;
+                        foreach ($specs as $spec):
+                    ?>
                         <div class="d-flex my-2  justify-content-between align-items-center">
-                            <span>1. Pant</span>
+                            <span><?php echo $counter.".&nbsp; &nbsp;". $spec['specification_name']; ?></span>
                             <span>
-                                <span>500</span>
+                                <span><?php echo $spec['specification_price']; ?></span>
                                 /=
                             </span>
                         </div>
-                    </small>
-
-                    <small>
-                        <div class="d-flex my-2  justify-content-between align-items-center">
-                            <span>2. Pant</span>
-                            <span>
-                                <span>500</span>
-                                /=
-                            </span>
-                        </div>
-                    </small>
-                    <small>
-                        <div class="d-flex my-2  justify-content-between align-items-center">
-                            <span>3. Pant</span>
-                            <span>
-                                <span>500</span>
-                                /=
-                            </span>
-                        </div>
-                    </small>
-                   
-                    <!-- Additionals -->
-                    <small class="font-weight-bold">Additionals</small>
-                    <small>
+                    <?php 
+                    $counter +=1;
+                        endforeach 
+                    ?>
+                     </small>
+                        <!-- Additionals -->
+                        <small class="font-weight-bold">Additionals</small>
+                        <small>
                         <p class="text-justify">
-                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quasi omnis modi, pariatur doloribus libero, in dolorem minima aliquid quia similique, natus nisi!
-                        </p>
-                    </small>
+                        <?php echo $customer['additionals'];?>                       
+                         </p>
+                        </small>
 
                     <!-- Billing -->
                     <small class="font-weight-bold">Billing</small>
                     <small>
                         <div class="d-flex my-2   justify-content-between  align-items-center">
                                 <span class="">Specifications</span>
-                                <span class="">1500/=</span>
+                                <span class=""><?php echo  $total_spec_price;?>/=</span>
                         </div>
                         <div class="d-flex my-2   justify-content-between  align-items-center">
                                 <span class="">Final price</span>
-                                <span class="font-weight-bold">1400/=</span>
+                                <span class="font-weight-bold">  <?php echo $customer['order_price'];?>/=</span>
                         </div>
                         <div class="d-flex my-2   justify-content-between  border-bottom pb-3 align-items-center">
                                 <span class="">Advance</span>
-                                <span class="">200/=</span>
+                                <span class="">  <?php echo $customer['advance_money'];?>/=</span>
                         </div>
                         <div class="d-flex my-2   justify-content-between pb-2 align-items-center">
                                 <span class="">Pending</span>
-                                <span class="font-weight-bold">1200/=</span>
+                                <span class="font-weight-bold">  <?php echo $customer['order_price']-$customer['advance_money'];?>/=</span>
                         </div>
                         <small>
                             <p>
                              Dear customer, we are more then happpy to serve you here, please visit the boutique on
-                         <strong>22-06-20</strong> to collect your order.
+                         <strong><?php echo $customer['delivery_date'];?></strong> to collect your order.
                          </p></small>
                     </small>
                 </div>
@@ -189,65 +196,57 @@
         <div id="print-offical-details"  class="col-md-6">
         <div class="card">
             <div class="card-header text-center">
-                ** FOR OFFICIAL USE ONLY <strong>ORD-111</strong> **
+                ** FOR OFFICIAL USE ONLY <strong>ORD-<?php echo $customer['order_id'];?></strong> **
             </div>
             <div class="card-body">
                 <small>
                     <div class="d-flex justify-content-between">
-                        <strong><span>ORDER ID: <b>111</b> </span></strong>
-                        <span>CUSTOMER ID: <b>1</b> </span> 
+                        <strong><span>ORDER ID: <b><?php echo $customer['order_id'];?></b> </span></strong>
+                        <span>CUSTOMER ID: <b><?php echo $customer['cust_id'];?></b> </span> 
 
                     </div>
                     <div class="d-flex justify-content-between mt-1">
-                        <span>Recieved On: <b> 15-06-20</b> </span> 
-                        <span>Delivery: <b>22-06-20</b> </span>
+                        <span>Recieved On: <b> <?php echo $customer['ordered_at'];?></b> </span> 
+                        <span>Delivery: <b><?php echo $customer['delivery_date'];?></b> </span>
                     </div>
 
                     <div class="d-flex justify-content-between mt-2 pb-1">
                         <span class="d-flex">Color:                             
-                            <span style="background:#999" class="p-0 ml-2 px-5 rounded px-2 border"></span>
+                            <span style="background:<?php echo $customer['product_color'];?>" class="p-0 ml-2 px-5 rounded px-2 border"></span>
                         </span> 
-                        <span>Product length: <b>50m</b> </span>
+                        <span>Product length: <b><?php echo $customer['product_length'];?></b> </span>
                     </div>
                     <hr>
 
-                    <div class="measurements">
+                    <div class="measurements container">
                             <strong> <p>Measurements</p></strong>
 
-                            <div class="d-flex justify-content-between">
-                            <span class="measurement"> No of Pieces <span> 2</span></span>
-                            <span class="measurement">Embroidery <span> 11  </span></span>
-                            <span class="measurement">Length <span> </span></span>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                            <span class="measurement">Chest <span></span></span>
-                            <span class="measurement">Waist <span></span></span>
-                            <span class="measurement">Hips <span></span></span>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                            <span class="measurement">Flair <span></span></span>
-                            <span class="measurement">Hemline <span></span></span>
-                            <span class="measurement">Sleeves <span></span></span>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                            <span class="measurement">Neck Line  <span> </span></span>
-                            <span class="measurement">Length <span></span></span>
-                            <span class="measurement">Poocha <span></span></span>
-                          </div>
-                           <div class="d-flex justify-content-between"> 
-                            <span class="measurement">Thy <span></span></span>
-                            <span class="measurement">Waist <span></span></span>
-                            <span class="measurement">Hips <span></span></span>
-                         </div>
+                           <div class="row">
+                           <span class="measurement col-6 col-lg-3 col-sm-6 col-xs-6"> No of Pieces <span class=" font-weight-bold"> <?php echo $measurement['no_of_pieces'];?></span></span>
+                            <span class="measurement col-6 col-lg-3 col-sm-6 col-xs-6">Embroidery <span class=" font-weight-bold"><?php echo $measurement['embroidery'];?> </span></span>
+                            <span class="measurement col-6 col-lg-3 col-sm-6 col-xs-6">U-Length <span class=" font-weight-bold"><?php echo $measurement['upper_length'];?> </span></span>
+                            <span class="measurement col-6 col-lg-3 col-sm-6 col-xs-6">U-Chest <span class=" font-weight-bold"><?php echo $measurement['upper_chest'];?></span></span>
+                            <span class="measurement col-6 col-lg-3 col-sm-6 col-xs-6">U-Waist <span class=" font-weight-bold"><?php echo $measurement['upper_waist'];?></span></span>
+                            <span class="measurement col-6 col-lg-3 col-sm-6 col-xs-6">U-Hips <span class=" font-weight-bold"><?php echo $measurement['upper_hips'];?></span></span>
+                            <span class="measurement col-6 col-lg-3 col-sm-6 col-xs-6">U-Flair <span class=" font-weight-bold"><?php echo $measurement['upper_flair'];?></span></span>
+                            <span class="measurement col-6 col-lg-3 col-sm-6 col-xs-6">U-Hemline <span class=" font-weight-bold"><?php echo $measurement['upper_hemline'];?></span></span>
+                            <span class="measurement col-6 col-lg-3 col-sm-6 col-xs-6">U-Sleeves <span class=" font-weight-bold"><?php echo $measurement['upper_sleeves'];?></span></span>
+                            <span class="measurement col-6 col-lg-3 col-sm-6 col-xs-6">U-Neck Line  <span class=" font-weight-bold"> <?php echo $measurement['upper_neck_line'];?></span></span>
+                            <span class="measurement col-6 col-lg-3 col-sm-6 col-xs-6">L-Length <span class=" font-weight-bold"><?php echo $measurement['lower_length'];?></span></span>
+                            <span class="measurement col-6 col-lg-3 col-sm-6 col-xs-6">L-Poocha <span class=" font-weight-bold"><?php echo $measurement['lower_poocha'];?></span></span>
+                            <span class="measurement col-6 col-lg-3 col-sm-6 col-xs-6">L-Thy <span class=" font-weight-bold"><?php echo $measurement['lower_thy'];?></span></span>
+                            <span class="measurement col-6 col-lg-3 col-sm-6 col-xs-6">L-Waist <span class=" font-weight-bold"><?php echo $measurement['lower_waist'];?></span></span>
+                            <span class="measurement col-6 col-lg-3 col-sm-6 col-xs-6">L-Hips <span class=" font-weight-bold"><?php echo $measurement['lower_hips'];?></span></span>
+                           </div>
                     </div>
                 
                     <hr>
                     <div class="specs">
                         <strong>Specifications</strong>
                        <p class="text-justify mt-1">
-                            <span class="font-weight-bold  pr-4">Pants</span>
-                            <span class="font-weight-bold  pr-4">Pants</span>
-                            <span class="font-weight-bold  pr-4">Pants</span>
+                        <?php foreach ($specs as $spec):?>
+                            <span class="font-weight-bold  pr-4"><?php echo $spec['specification_name']; ?></span>
+                        <?php endforeach ?>
                        </p>
 
                     </div>
@@ -255,7 +254,7 @@
                     <div class="extra">
                     <strong>Additonals</strong>
                         <p class="text-justify mt-0">
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quasi omnis modi, pariatur doloribus libero, in dolorem minima aliquid quia similique, natus nisi!                         </p>
+                        <?php echo $customer['additionals'];?>                       
                     </div>
 
                     <hr>
@@ -268,7 +267,7 @@
                            </div>
                            <div>
                             <span>Signature</span>&nbsp; &nbsp;
-                                <span  class="px-5 border-bottom text-muted">Recieved</span>
+                                <span  class="px-5 border-bottom text-muted"></span>
                            </div>
                         </div>
                         <div class="d-flex justify-content-between pt-3" >
@@ -309,14 +308,34 @@
 
 <script>
 
-$('#print-bill-btn').click(function(){
-    $('#print-bill').attr("class","col-6  border rounded p-4");
+$('#print-all-btn').click(function(){
+        $('#print-bill').css("display","");
+        $('#print-offical-details').css("display","");
+
+        $('#print-bill').attr("class","col-6  border rounded p-4");
         $('#print-offical-details').attr("class","col-6 ");
 
     window.print();
 
 });
 
+$('#print-bill-btn').click(function(){
+    $('#print-bill').attr("class","col-6  border rounded p-4");
+    $('#print-offical-details').css("display","none");
+    $('#print-bill').css("display","");
 
+    window.print();
+
+});
+
+$('#print-info-btn').click(function(){
+        $('#print-offical-details').attr("class","col-6  border rounded p-4");
+        $('#print-offical-details').attr("class","col-6 ");
+        $('#print-bill').css("display","none");
+        $('#print-offical-details').css("display","");
+
+    window.print();
+
+});
 </script>
 

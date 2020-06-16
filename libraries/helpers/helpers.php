@@ -68,13 +68,18 @@ function paginationLinks($current_page, $total_pages, $base_url) {
 		$http_query = "?";
 	}
 
-	$html = '<ul class="pagination text-center">';
+	
+  
+
+
+
+	$html = '<nav aria-label="Page navigation example"><ul class="pagination">';
 
 	if ($current_page == 1) {
 
-		$html .= '<li class="disabled"><a>First</a></li>';
+		$html .= '<li class="page-item disabled"><a class="page-link">First</a></li>';
 	} else {
-		$html .= '<li><a href="' . $base_url . $http_query . '&page=1">First</a></li>';
+		$html .= ' <li class="page-item"><a class="page-link" href="' . $base_url . $http_query . '&page=1">First</a></li>';
 	}
 
 	// Show pagination links
@@ -88,28 +93,29 @@ function paginationLinks($current_page, $total_pages, $base_url) {
 	}
 
 	for (; $i <= ($current_page + 4) && ($i <= $total_pages); $i++) {
-		($current_page == $i) ? $li_class = ' class="active"' : $li_class = '';
+		($current_page == $i) ? $li_class = ' class="page-item active"' : $li_class = '';
 
 		$link = $base_url . $http_query;
 
-		$html = $html . '<li' . $li_class . '><a href="' . $link . '&page=' . $i . '">' . $i . '</a></li>';
+		$html = $html . '<li' . $li_class . '><a class="page-link" href="' . $link . '&page=' . $i . '">' . $i . '</a></li>';
 
 		if ($i == $current_page + 4 && $i < $total_pages) {
 
-			$html = $html . '<li class="disabled"><a>...</a></li>';
+			$html = $html . '<li class="page-item disabled"><a lass="page-link">...</a></li>';
 
 		}
 
 	}
 
 	if ($current_page == $total_pages) {
-		$html .= '<li class="disabled"><a>Last</a></li>';
+		$html .= '<li class="page-item disabled"><a class="page-link">Last</a></li>';
 	} else {
 
-		$html .= '<li><a href="' . $base_url . $http_query . '&page=' . $total_pages . '">Last</a></li>';
+		$html .= '<li class="page-item" ><a class="page-link" href="' . $base_url . $http_query . '&page=' . $total_pages . '">Last</a></li>';
 	}
 
-	$html = $html . '</ul>';
+	$html = $html . ' </ul>
+	</nav>';
 
 	return $html;
 }

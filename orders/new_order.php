@@ -1,6 +1,16 @@
 <?php session_start(); ?>
 <?php require_once '../libraries/config/config.php'; ?>
 <?php include '../includes/header.php'; ?>
+
+<?php
+    if(isset($_GET['s']) && isset($_GET['id']) && $_GET['s'] =="registered"){
+        $db = getDbInstance();
+        $db->where('cust_id',$_GET['id']);
+        $customer=$db->getOne('customer');
+        $measurement_db=$db->where('id',$customer['measurement_id'])->getOne('measurements');
+    }    
+?>
+
 <?php
     $db = getDbInstance();
     $specs = $db->get('specifications');
@@ -104,26 +114,38 @@
                        
                             <div style="margin-top: -30px;" class="row">
                             <div class="col-12 col-lg-10 m-auto">
-                                <form method ="POST" enctype="multipart/form-data" action ="../libraries/helpers/save_order_details.php" class="multisteps-form__form">
+                                <form method ="POST" enctype="multipart/form-data" 
+                                <?php  if(@$customer['cust_id'])
+                                 {echo  'action ="add_order_details.php"';
+                                 }else{
+                                    echo 'action ="save_order_details.php"';}
+                                    ?>  class="multisteps-form__form">
                                     
                                 <!--CUSTOMER DETAILS-->
                                 <div class="multisteps-form__panel shadow p-5 rounded bg-white js-active" data-animation="scaleIn">
                                     <h3 class="multisteps-form__title">CUSTOMER DETAILS</h3>
                                     <div class="multisteps-form__content">
                                     <div class="form-row mt-4">
+
+                                        <?php  if(@$customer['cust_id']){
+                                            echo '<input value="'.@$customer["cust_id"].'" 
+                                            class="multisteps-form__input form-control " name="cust_id" hidden type="text" placeholder="Full Name"/>';
+                                            echo '<input value="'.@$customer["measurement_id"].'" 
+                                            class="multisteps-form__input form-control " name="measurement_id" hidden type="text" placeholder="Full Name"/>';
+                                        }
+                                        ?>
                                             <div class="col-12 col-sm-6">
-                                                <input class="multisteps-form__input form-control " name="cust_name" type="text" placeholder="Full Name"/>
+                                                <input value="<?php echo @$customer['cust_name'] ?>" class="multisteps-form__input form-control " name="cust_name" type="text" placeholder="Full Name"/>
                                             </div>
                                             <div class="col-12 col-sm-6 mt-2 mt-sm-0">
-                                                <input class="multisteps-form__input form-control " name="cust_phone_number" type="number" placeholder="Phone Number"/>
+                                                <input   <?php  if(@$customer['cust_id']){ echo'disabled'; }?> value="<?php echo @$_GET['phone'];  echo @$customer['cust_phone_number'] ?>" class="multisteps-form__input form-control " name="cust_phone_number" type="number" placeholder="Phone Number"/>
                                             </div>
                                            </div>
                                             <div class="form-row mt-2">
                                                 <div class="col-12 col-sm-12  mt-sm-0">
                                                     <select name="cust_sex" class="form-control">
-                                                    <option default value="f">Female</option>
-
-                                                        <option value="m">Male</option>
+                                                        <option <?php  if(@$customer['cust_sex']== "f") {echo "selected";}?>  default value="f">Female</option>
+                                                        <option <?php  if(@$customer['cust_sex']== "m") {echo "selected";}?>  value="m">Male</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -131,13 +153,15 @@
                                             
                                             <div class="col-12 col-sm-12 mt-sm-0">
                                                 <textarea name="cust_address" class="multisteps-form__input form-control " type="text" placeholder="Address" 
-                                                    rows="5"></textarea>
+                                                    rows="5"><?php echo @$customer['cust_address'] ?></textarea>
                                             </div>
                                             </div>
                                             
                                             <div class="button-row d-flex mt-4">
                                             <button class="btn btn-success  ml-auto  js-btn-next" type="button" title="Next">Next</button>
                                             </div>
+
+                                            ?>
                                     </div>
                                 </div>
 
@@ -226,12 +250,12 @@
                                     <div class="multisteps-form__content">
                                         <div class="form-row mt-4 ">
                                             <div class="form-group col-md-3 p-0">
-                                                <label for="no_of_pieces" >No of Pieces</label>
-                                                <input name="no_of_pieces" type="number" class="form-control mt-0" id="no_of_pieces" placeholder="No of Pieces">
+                                                <label for="no_of_pieces"  class="mb-0" >No of Pieces</label>
+                                                <input name="no_of_pieces" type="number" value="<?php echo @$measurement_db['no_of_pieces'] ?>"  class="form-control measurement mt-0" id="no_of_pieces" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-9 p-0 pl-2">
                                                 <label for="embroidery" class="mb-0" >Embroidery</label>
-                                                <input name="embroidery" type="text" class="form-control mt-0" id="embroidery" placeholder="Embroidery">
+                                                <input name="embroidery" type="text" class="measurement form-control mt-0" value="<?php echo @$measurement_db['embroidery'] ?>" id="embroidery" placeholder="Embroidery">
                                             </div>
                                         </div>
                                     <!-- MEASUREMENTS SHIRT -->
@@ -239,35 +263,35 @@
                                         <div class="form-row mt-2 ">
                                             <div class="form-group col-md-3 pl-2 p-0">
                                                 <label for="upper_length" class="mb-0" >Length</label>
-                                                <input name="upper_length" type="number" class="form-control mt-0" id="upper_length" placeholder="No of Pieces">
+                                                <input name="upper_length" type="number" value="<?php echo @$measurement_db['upper_length'] ?>"  class="form-control measurement mt-0" id="upper_length" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-3 pl-2 p-0">
                                                 <label for="upper_chest" class="mb-0" >Chest</label>
-                                                <input name="upper_chest" type="number" class="form-control mt-0" id="upper_chest" placeholder="No of Pieces">
+                                                <input name="upper_chest" type="number" value="<?php echo @$measurement_db['upper_chest'] ?>"  class="form-control measurement mt-0" id="upper_chest" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-3 pl-2 p-0">
                                                 <label for="upper_waist" class="mb-0" >Waist</label>
-                                                <input name="upper_waist" type="number" class="form-control mt-0" id="upper_waist" placeholder="No of Pieces">
+                                                <input name="upper_waist" type="number" value="<?php echo @$measurement_db['upper_waist'] ?>"  class="form-control measurement mt-0" id="upper_waist" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-3 pl-2 p-0">
                                                 <label for="upper_hips" class="mb-0" >Hips</label>
-                                                <input name="upper_hips" type="number" class="form-control mt-0" id="upper_hips" placeholder="No of Pieces">
+                                                <input name="upper_hips" type="number" value="<?php echo @$measurement_db['upper_hips'] ?>"  class="form-control measurement mt-0" id="upper_hips" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-3 pl-2 p-0">
                                                 <label for="upper_flair" class="mb-0" >Flair</label>
-                                                <input name="upper_flair" type="number" class="form-control mt-0" id="upper_flair" placeholder="No of Pieces">
+                                                <input name="upper_flair" type="number" value="<?php echo @$measurement_db['upper_flair'] ?>"  class="form-control measurement mt-0" id="upper_flair" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-3 pl-2 p-0">
                                                 <label for="upper_hemline" class="mb-0" >Hemline</label>
-                                                <input name="upper_hemline" type="number" class="form-control mt-0" id="upper_hemline" placeholder="No of Pieces">
+                                                <input name="upper_hemline" type="number" value="<?php echo @$measurement_db['upper_hemline'] ?>"  class="form-control measurement mt-0" id="upper_hemline" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-3 pl-2 p-0">
                                                 <label for="upper_sleeves" class="mb-0" >Sleeves</label>
-                                                <input name="upper_sleeves" type="number" class="form-control mt-0" id="upper_sleeves" placeholder="No of Pieces">
+                                                <input name="upper_sleeves" type="number" value="<?php echo @$measurement_db['upper_sleeves'] ?>"  class="form-control measurement mt-0" id="upper_sleeves" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-3 pl-2 p-0">
                                                 <label forfor="upper_neck_line"s="mb-0" >Neck Line</label>
-                                                <input name="upper_neck_line" type="number" class="form-control mt-0" id="upper_neck_line" placeholder="No of Pieces">
+                                                <input name="upper_neck_line" type="number" value="<?php echo @$measurement_db['upper_neck_line'] ?>"  class="form-control measurement mt-0" id="upper_neck_line" placeholder="No of Pieces">
                                             </div>
                                         </div>
 
@@ -290,33 +314,46 @@
                                         <div class="form-row mt-2 ">
                                             <div class="form-group col-md-3 pl-2 p-0">
                                                 <label for="lower_length" class="mb-0" >Length</label>
-                                                <input name="lower_length" type="number" class="form-control mt-0" id="lower_length" placeholder="No of Pieces">
+                                                <input name="lower_length"  type="number" value="<?php echo @$measurement_db['lower_length'] ?>"  class="form-control measurement mt-0" id="lower_length" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-3 pl-2 p-0">
                                                 <label for="lower_poocha" class="mb-0" >Poocha</label>
-                                                <input name="lower_poocha" type="number" class="form-control mt-0" id="lower_poocha" placeholder="No of Pieces">
+                                                <input name="lower_poocha" type="number" value="<?php echo @$measurement_db['lower_poocha'] ?>"  class="form-control measurement mt-0" id="lower_poocha" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-3 pl-2 p-0">
                                                 <label for="lower_thy" class="mb-0" >Thy</label>
-                                                <input name="lower_thy" type="number" class="form-control mt-0" id="lower_thy" placeholder="No of Pieces">
+                                                <input name="lower_thy" type="number" value="<?php echo @$measurement_db['lower_thy'] ?>"  class="form-control measurement mt-0" id="lower_thy" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-3 pl-2 p-0">
                                                 <label for="lower_waist" class="mb-0" >Waist</label>
-                                                <input name="lower_waist" type="number" class="form-control mt-0" id="lower_waist" placeholder="No of Pieces">
+                                                <input name="lower_waist" type="number" value="<?php echo @$measurement_db['lower_waist'] ?>"  class="form-control measurement mt-0" id="lower_waist" placeholder="No of Pieces">
                                             </div>
                                             <div class="form-group col-md-3 pl-2 p-0">
                                                 <label for="lower_hips" class="mb-0" >Hips</label>
-                                                <input name="lower_hips" type="number" class="form-control mt-0" id="lower_hips" placeholder="No of Pieces">
+                                                <input name="lower_hips" type="number" value="<?php echo @$measurement_db['lower_hips'] ?>"  class="form-control measurement mt-0" id="lower_hips" placeholder="No of Pieces">
                                             </div>
                                         </div>
+                                        <?php  if(@$customer['cust_id']){
+                                        echo '<div class="form-row my-2">
+                                            <div class="col-12 col-sm-12 mt-sm-0">
+                                                <div class="custom-control custom-checkbox d-inline">
+                                                    <input type="checkbox" class="custom-control-input" name="measurements_changed" id="customCheck" >
+                                                    <label class="custom-control-label" for="customCheck">Did you changed any value for measurements?</label>
+                                                </div>
+                                            </div>
+                                            </div>';
+                                        }?>
                                         <small  class="form-text text-muted"> Additonal</small>
 
                                         <div class="form-row mt-2">
                                             <div class="col-12 col-sm-12 mt-sm-0">
-                                                <textarea class="multisteps-form__input form-control " name="measurement_additonal" type="text" placeholder="Additional" 
+                                                <textarea class="multisteps-form__input form-control  " name="measurement_additonal" type="text" placeholder="Additional" 
                                                     rows="3"></textarea>
                                             </div>
                                             </div>
+                                            
+                               
+                                       
                                         <div class="button-row d-flex mt-4">
 
                                         <button class="btn btn-outline-primary   mt-0 js-btn-prev" type="button" title="Prev">Prev</button>
@@ -390,6 +427,7 @@
 
 </body>
 <?php include '../includes/scripts.php' ?>
+
 <script>
 var final_price =0;
 $('.spec-item-js').change(function(){
@@ -414,7 +452,12 @@ $('#order_price').change(function(){
     }
    
 })
-
+<?php  if(@$customer['cust_id']){
+?>
+$('.measurement').change(function(){
+    $('#customCheck').prop('checked',true);
+})
+<?php }?>
 </script>
 
 
