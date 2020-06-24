@@ -34,19 +34,20 @@ if (isset($_SESSION['staff_member_logged_in']) && $_SESSION['staff_member_logged
                 </div>
                     <div class="row text-center">
                         <div class="col-lg-5 offset-lg-3  mb-4">
-                            <div class="card h-100">
+                            <div class="card bg-success shadow h-100">
                                 <div class="card-body container p-5 d-flex flex-column justify-content-center align-items-center ">
-                                    <h1 class="display-2 text-primary"><span class="ion ion-ios-tablet-portrait-outline"></span></h1>
-                                    <h4 class="card-title text-primary">SPLASH BOUTIQUE.</h4>
-                                    <p class="lead text-justify px-4">You must enter your phone number and your password to login to the server.</p>
+                                    <h1 class="display-2 text-dark"><span class="ion ion-ios-tablet-portrait-outline"></span></h1>
+                                    <h4 class="card-title text-dark">SPLASH BOUTIQUE.</h4>
+                                    <p class="lead text-justify px-4">You must enter your phone number  to login to the server.</p>
                                     <form method="POST" action="/libraries/helpers/authenticate.php">
                                     <div class="input-group mb-1 mt-2">
                                         <input type="text" name="phone_number" class="form-control form-control-lg" placeholder="Phone number">
                                     </div>
-                                    <div class="input-group mb-4">
-                                        <input type="password" name="password" class="form-control form-control-lg" placeholder="Password">
+                                    <div class="input-group mb-2 mt-1">
+                                        <input type="text" name="password" class="form-control form-control-lg" placeholder="Password">
                                     </div>
-                                    <button type="submit" class="btn btn-success mt-auto btn-block">Sign in</button>
+                                    <button type="submit" class="btn btn-dark mt-auto btn-block">Authenticate</button>
+                                    <p class="text-muted mt-3">Dear user, this gateway  proceeds you towards a secure system of the splash boutiques.</p>
                                     </form>
 
                                 </div>

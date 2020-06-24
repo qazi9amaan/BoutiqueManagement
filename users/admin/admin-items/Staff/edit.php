@@ -1,5 +1,6 @@
 <?php session_start();?>
 <?php require_once '/var/www/html/libraries/config/config.php';?>
+<?php include PARENT .'/users/admin/includes/auth-validate.php';?>
 
 <?php 
 $id = filter_input(INPUT_POST, 'id');

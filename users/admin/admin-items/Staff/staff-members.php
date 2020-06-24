@@ -1,5 +1,7 @@
 <?php session_start();?>
 <?php require_once '/var/www/html/libraries/config/config.php';?>
+<?php include PARENT .'/users/admin/includes/auth-validate.php';?>
+
 
 <?php
     require_once PARENT . '/users/admin/lib/Staff/Staff.php';

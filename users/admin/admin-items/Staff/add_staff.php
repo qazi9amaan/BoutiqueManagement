@@ -2,6 +2,7 @@
 <?php require_once '/var/www/html/libraries/config/config.php';?>
 <?php include PARENT .'/includes/header.php';?>
 <?php include PARENT .'/users/admin/includes/style-scripts.php';?>
+<?php include PARENT .'/users/admin/includes/auth-validate.php';?>
 
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') 

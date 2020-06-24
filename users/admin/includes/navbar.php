@@ -1,3 +1,5 @@
+
+
 <style>
 .sidebar img{
     margin-top: -17px;
@@ -34,15 +36,36 @@
             <i class="fa fa-hourglass-start"></i>&nbsp; Processing Order</a></li>
             
             <li
+            <?php echo (CURRENT_PAGE == 'Completed-Orders.php') ? 'class="active"' : ''; ?>
+            ><a class=" streched-link" href="/users/admin/admin-items/Orders/Completed-Orders.php">
+            <i class="fa fa-hourglass-end"></i>&nbsp; Completed Order</a></li>
+            
+
+            <li
             <?php echo (CURRENT_PAGE == 'staff-members.php' || CURRENT_PAGE == 'add_staff.php' ) ? 'class="active"' : ''; ?>
             ><a class=" streched-link" href="/users/admin/admin-items/Staff/staff-members.php">
             <i class="fa fa-building-o"></i>&nbsp; Staff Members</a></li>
 
+            <li
+            <?php echo (CURRENT_PAGE == 'artisens.php') ? 'class="active"' : ''; ?>
+            ><a class=" streched-link" href="/users/admin/admin-items/Stats/artisens.php">
+            <i class="fa fa-pagelines"></i>&nbsp; Artisens</a></li>
 
-            <li><a class=" streched-link" href="#"><i class="fas fa-project-diagram"></i>portfolio</a></li>
-            <li><a class=" streched-link" href="#"><i class="fas fa-blog"></i>Blogs</a></li>
-            <li><a class=" streched-link" href="#"><i class="fas fa-address-book"></i>Contact</a></li>
-            <li><a class=" streched-link" href="#"><i class="fas fa-map-pin"></i>Map</a></li>
+            <li
+            <?php echo (CURRENT_PAGE == 'sales.php' ) ? 'class="active"' : ''; ?>
+            ><a class=" streched-link" href="/users/admin/admin-items/Sales/sales.php">
+            <i class="fa fa-line-chart"></i>&nbsp; Sales</a></li>
+
+
+            <li
+            <?php echo (CURRENT_PAGE == 'logout.php' ) ? 'class="active"' : ''; ?>
+            ><a class=" streched-link" href="/users/admin/logout.php">
+            <i class="fa fa-arrow-circle-o-left"></i>&nbsp; Logout</a></li>
+
+           
+
+
+           
         </ul> 
         
     </div>

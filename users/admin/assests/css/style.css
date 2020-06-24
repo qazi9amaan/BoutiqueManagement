@@ -309,3 +309,43 @@ a:hover {
     border: 1px solid #28a745;
     border-radius: 0.25rem;
 }
+
+
+/* LIGHT GREEN  3*/
+
+.bg-purple-light {
+    background: #797aad;
+}
+
+.bg-purple-light .panel-item>* {
+    color: #fff;
+    fill: #fff;
+    font-family: Helvetica, Arial, sans-serif;
+    opacity: 1;
+}
+
+.bg-purple-light .panel-item i {
+    color: #fff;
+}
+
+.bg-purple-light .card-footer {
+    background: rgba(0, 0, 0, .1);
+    ;
+}
+
+.bg-purple-light .card-footer:hover {
+    background: rgba(0, 0, 0, .2);
+}
+
+.bg-purple-light .card-footer a {
+    color: #fff;
+}
+
+.border-light-purple {
+    border: 1px solid #5f5f87;
+    border-radius: 0.25rem;
+}
+
+.bg-blue-light-chart {
+    background: rgba(0, 123, 255, .12549);
+}

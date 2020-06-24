@@ -45,8 +45,9 @@
       <td ><?php echo htmlspecialchars($row['advance_money']); ?> </td>
       <td ><?php echo htmlspecialchars((float)$row['order_price']-(float)$row['advance_money']); ?> </td>
       <td>
+        <a href="/orders/view_order_details.php?order=<?php echo htmlspecialchars($row['order_id']); ?>" class="btn btn-sm btn-primary"><i class="fa fa-eye">&nbsp;View</i></a>
         <a href="#" data-toggle="modal" data-target="#confirm-delete-<?php echo $row['order_id']; ?>"class="btn btn-sm btn-danger"><i class="fa fa-trash"> Delete</i></a>
-        <a href="/orders/complete-order-noti.php?order=<?php echo htmlspecialchars($row['order_id']); ?>" class="btn btn-sm btn-success"><i class="fa fa-print"> View / Print</i></a>
+        <a href="/orders/complete-order-noti.php?order=<?php echo htmlspecialchars($row['order_id']); ?>" class="btn btn-sm btn-success"><i class="fa fa-print">  Print</i></a>
          <a href="#" class="btn btn-sm btn-outline-primary"><i class="fa fa-truck"> Complete</i></a>
 
       </td>

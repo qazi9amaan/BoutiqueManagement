@@ -1,54 +1,51 @@
-<?php 
-    session_start();
-    require_once 'libraries/config/config.php';
-?>
-<?php
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST')
-{
-	$username = filter_input(INPUT_POST, 'phone_number');
-	$db = getDbInstance();
-	$db->where('cust_phone_number', $username);
-	$row = $db->getOne('customer');
-	if ($db->count >= 1)
-    {
-			header('Location:  /users/customers/index.php?s=registered&number='.$username.'&id='.$row['cust_id'].'&usr='.$row['cust_name']);
-	}
-    else
-    {
-        header('Location:  /users/customers/index.php?s=new&number='.$username);
-		exit;
-	}
-}
-
-
-?>
+<?php session_start();?>
 <?php include 'includes/header.php'; ?>
 <body>
-<?php include 'includes/navbar.php' ;?>    
-<header class="bg-primary">
-        <div class="container h-100">
-            <div class="row h-100">
-                <div class="col-12">
-                    <div class="text-center m-0 vh-100 d-flex flex-column justify-content-center text-light">
-                        <h1 style="letter-spacing:5px" class="display-4">SPLASH FASHION</h1>
-                        <p class="lead">"People will stare, make it worth their while."</p>
-                        <form action="" method="POST">
-                        <div class="row">
-                            <div class="col-lg-4 col-sm-6 mx-auto">
-                                <div class="input-group mb-3">
-                                  <input type="number" name="phone_number" class="form-control form-control-lg" placeholder="Customer phone number">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-2 mx-auto">
-                            <button type="submit" class="btn btn-lg btn-success">Continue</button>
-                        </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+<link rel="stylesheet" href="/assests/css/animation.css">
+  <nav class=" p-3 text-center mt-5 pt-5">
+    <p class=" logo lead">SPLASH GROUP OF BOUTIQUES</p>
+  </nav>
+<div class="wrapper">
+  <div class="candles">
+    <div class="light__wave"></div>
+    <div class="candle1">
+      <div class="candle1__body">
+        <div class="candle1__eyes">
+          <span class="candle1__eyes-one"></span>
+          <span class="candle1__eyes-two"></span>
         </div>
-    </header>
+        <div class="candle1__mouth"></div>
+      </div>
+      <div class="candle1__stick"></div>
+    </div>
+    
+    <div class="candle2">
+      <div class="candle2__body">
+        <div class="candle2__eyes">
+          <div class="candle2__eyes-one"></div>
+          <div class="candle2__eyes-two"></div>
+        </div>
+      </div>
+      <div class="candle2__stick"></div>
+    </div>
+    <div class="candle2__fire"></div>
+    <div class="sparkles-one"></div>
+    <div class="sparkles-two"></div>
+    <div class="candle__smoke-one">
+
+    </div>
+    <div class="candle__smoke-two">
+
+    </div>
+    
+  </div>
+  <div class="floor">
+      <div class="panel">
+      <a href="main-page.php" class="btn btn-outline-primary">TAKE ME IN SPLASH</a>
+      </div>
+  </div>
+  
+
+</div>
 </body>
 <?php include 'includes/scripts.php' ?>

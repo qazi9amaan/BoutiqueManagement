@@ -144,9 +144,10 @@
                                     <td ><?php echo htmlspecialchars((float)$row['order_price']-(float)$row['advance_money']); ?> </td>
 
                                     <td >
+                                        <a href="/orders/view_order_details.php?order=<?php echo htmlspecialchars($row['order_id']); ?>" class="btn btn-sm btn-success"><i class="fa fa-eye">&nbsp;View</i></a>
                                         <button  data-toggle="modal" data-target="#edit-order-<?php echo $row['order_id']; ?>" class="btn btn-success btn-sm mx-2 mt-md-0 mt-1 "><i class="fa fa-pencil"></i> Change  </button>
                                         <button  data-toggle="modal" data-target="#delete-order-<?php echo $row['order_id']; ?>" class="btn btn-danger btn-sm mx-2 ml-md-0 mt-md-0  mt-1"><i class="fa fa-times"></i> Delete</button>
-                                        <a href="/orders/complete-order-noti.php?order=<?php echo htmlspecialchars($row['order_id']); ?>" class="btn btn-sm btn-outline-primary"><i class="fa fa-print">&nbsp;View/Print</i></a>
+                                        <a href="/orders/complete-order-noti.php?order=<?php echo htmlspecialchars($row['order_id']); ?>" class="btn btn-sm btn-outline-primary"><i class="fa fa-print">&nbsp;Print</i></a>
                                         <button data-order_id="<?php echo $row['order_id']; ?>" data-toggle="modal" data-target="#assign-artisen-to-order" class="btn btn-primary btn-sm mx-2 ml-md-0 mt-md-0  mt-1"><i class="fa fa-user-circle"></i>  Assign Artisen</button>
                                     </td>
                                 </tr>

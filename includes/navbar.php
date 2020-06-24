@@ -7,49 +7,47 @@
             <div class="navbar-collapse collapse justify-content-center" id="collapsingNavbar">
                 
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="layoutDd" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          Layouts
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="layoutDd">
-                            <a class="dropdown-item px-2" href="./">Default</a>
-                            <a class="dropdown-item px-2" href="./template2.html">Layout 2</a>
-                            <a class="dropdown-item px-2" href="./template3.html">Layout 3</a>
-                        </div>
+                  
+                    
+                  
+
+                    <?php if(!isset($_SESSION['staff_member_logged_in'])){?>
+                        <li class="nav-item">
+                        <a class="nav-link" href="#grid">Login to your account</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#buttons">Buttons</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#navs">Navs</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#cards">Cards</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#modals">Modals</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#typography">Typography</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#forms">Forms</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#grid">Grid</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDd" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          More
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDd">
-                            <a class="dropdown-item px-2" href="#more">Badges</a>
-                            <a class="dropdown-item px-2" href="#more">Tooltips &amp; Popups</a>
-                            <a class="dropdown-item px-2" href="#more">Progress &amp; Alerts</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item px-2" href="#more">All</a>
-                        </div>
-                    </li>
+                    <?php }else{?>
+                        <li class="nav-item">
+                        <a class="nav-link" href="/main-page.php"> New Order</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/users/managers/items/delivery-orders.php"> Deliver Outs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/users/managers/items/assign-order.php">Assign Order</a>
+                        </li>
+                        <li class="nav-item">
+                        
+                            <a class="nav-link" href="<?php
+                            if (isset($_SESSION['staff_account_type']) && $_SESSION['staff_account_type'] === 'admin')
+                            {
+                                echo '/users/admin/';
+
+                            } if (isset($_SESSION['staff_account_type'])   && $_SESSION['staff_account_type'] === 'manager')
+                            {
+                                echo '/users/managers/';
+
+
+                            } if (isset($_SESSION['staff_account_type']) && $_SESSION['staff_account_type'] == "artisen")
+                            {
+                                echo '/users/artisen/';
+                            }
+                            ?>">My Account</a>
+                        </li>
+                        <li class="nav-item">
+                                <a class="nav-link" href="/logout.php">Logout</a>
+                            </li>
+                   <?php }?>
+                   
                 </ul>
             </div>
         </div>

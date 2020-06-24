@@ -144,7 +144,7 @@
                                                 </div>
                                                 <div class="modal-body mb-0 pb-0">
                                                     <input hidden name="cust_id" value="<?php echo $row['cust_id']; ?>">
-
+                                                    
                                                     <p class="text-center"> Are you sure you want to delete this customer?<br>
                                                    <i class="fa fa-arrow-circle-o-right"></i>
                                                     Deleting <strong><?php echo htmlspecialchars($row['cust_name']); ?></strong>

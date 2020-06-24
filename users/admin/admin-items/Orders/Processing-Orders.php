@@ -31,7 +31,7 @@
     if ($order_dir) {
         $db->orderBy($order_by, $order_dir);
     }
-    $select = array('s.full_name','c.cust_name', 'c.cust_id', 'c.cust_phone_number', 'o.order_id', 'o.ordered_at', 'o.order_price',	'o.order_taken_by' 	,'o.advance_money' 	,'o.delivery_date');
+    $select = array('s.full_name','c.cust_name', 'c.cust_id', 'c.cust_phone_number',  'o.extended_reason','o.order_id', 'o.ordered_at', 'o.order_price',	'o.order_taken_by' 	,'o.advance_money' 	,'o.delivery_date');
     $db->pageLimit = $pagelimit;
     $db->join("customer c", "c.cust_id=o.cust_id", "LEFT");
     $db->join("staff_accounts s", "s.id=o.artisen_assigned", "LEFT");
@@ -139,12 +139,101 @@
                                     <td ><?php echo htmlspecialchars($row['order_price']); ?> </td>
                                     <td ><?php echo htmlspecialchars($row['ordered_at']); ?> </td>
                                     <td ><?php echo htmlspecialchars($row['advance_money']); ?> </td>
-                                    <td ><?php echo htmlspecialchars($row['delivery_date']); ?> </td>
+                                    <td ><?php echo htmlspecialchars($row['delivery_date']); ?><?php if($row['extended_reason']){echo '<span class="badge ml-2 p-1 badge-danger">Extended</span>';} ?> </td>
                                     <td >
-                                        <a href="/orders/complete-order-noti.php?order=<?php echo htmlspecialchars($row['order_id']); ?>" class="btn btn-primary btn-sm"><i class="fa fa-print">&nbsp;View/Print</i></a>
-                                        <button data-order_id="<?php echo $row['order_id']; ?>" data-toggle="modal" data-target="#assign-artisen-to-order" class="btn btn-success btn-sm mx-2 ml-md-0 mt-md-0  mt-1"><i class="fa fa-pencil"></i>  Change Artisen</button>
+                                    <a href="/orders/view_order_details.php?order=<?php echo htmlspecialchars($row['order_id']); ?>" class="btn btn-sm btn-success"><i class="fa fa-eye">&nbsp;View</i></a>
+
+                                        <a href="/orders/complete-order-noti.php?order=<?php echo htmlspecialchars($row['order_id']); ?>" class="btn btn-primary btn-sm"><i class="fa fa-print">&nbsp;Print</i></a>
+                                        <button data-order_id="<?php echo $row['order_id']; ?>" data-toggle="modal" data-target="#assign-artisen-to-order" class="btn btn-success btn-sm  ml-md-0 mt-md-0  mt-1"><i class="fa fa-pencil"></i>  Change Artisen</button>
+                                        <button  data-toggle="modal" data-target="#complete-order-<?php echo $row['order_id']; ?>" class="btn btn-danger btn-sm  ml-md-0 mt-md-0  mt-1"><i class="fa fa-hourglass-end"></i>&nbsp;Complete order</button>
+                                        <button  data-toggle="modal" data-target="#extend-order-delivery-<?php echo $row['order_id']; ?>" class="btn btn-dark btn-sm mx-2 ml-md-0 mt-md-0  mt-1"><i class="fa fa-long-arrow-right"></i>&nbsp;Extend Delivery</button>
+
                                     </td>
                                 </tr>
+
+                                <div class="modal fade" id="extend-order-delivery-<?php echo $row['order_id']; ?>" role="dialog">
+                                    <div class="modal-dialog">
+                                        <form action="/orders/extend_order_delivery_helper.php?r=/users/admin/admin-items/Orders/Processing-Orders.php" method="POST">
+                                            <!-- Modal content -->
+                                            <div class="modal-content">
+                                                <div class="modal-header ">
+                                                    <a>Confirmination </a>
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                </div>
+                                                <div class="modal-body mb-0 pb-0">
+                                                    <input hidden name="order_id" value="<?php echo $row['order_id']; ?>">
+
+                                                    <p class="text-center"> Are you sure you want to extend the delivery?<br>
+                                                   <i class="fa fa-arrow-circle-o-right"></i>
+                                                    Extending delivery for <strong> OR-<?php echo htmlspecialchars($row['order_id']); ?></strong>
+                                                    </p>
+                                                    <div class="form-group">
+                                                        <label for="date">Ordered on</label>
+                                                        <input id="date" type="text" class="form-control" disabled value="<?php echo date('j F Y', strtotime($row['ordered_at'])); ?>" id="">
+                                                    </div>
+                                                    <div class=" form-group">
+                                                        <label for="amount">Delivery</label>
+                                                        <input id="date" type="date" name="previous_delivery" class="form-control" disabled value="<?php echo date('Y-m-d', strtotime($row['delivery_date'])); ?>" id="">
+                                                    </div>
+                                                    <div class=" form-group">
+                                                        <label for="new_delivery">New Delivery Date</label>
+                                                        <input id="new_delivery" type="date" name="delivery_date" class="form-control"  id="">
+                                                    </div>
+                                                    <div class=" form-group">
+                                                        <label for="new_delivery">Reason</label>
+                                                        <textarea name="extended_reason" id="" class=" form-control" rows="2"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-outline-success" data-dismiss="modal">No</button>
+                                                    <button type="submit" class="btn btn-success pull-left">Proceed</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                    
+                                <div class="modal fade" id="complete-order-<?php echo $row['order_id']; ?>" role="dialog">
+                                    <div class="modal-dialog">
+                                        <form action="/orders/complete_order_helper.php?r=/users/admin/admin-items/Orders/Processing-Orders.php" method="POST">
+                                            <!-- Modal content -->
+                                            <div class="modal-content">
+                                                <div class="modal-header ">
+                                                    <a>Confirmination </a>
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                </div>
+                                                <div class="modal-body mb-0 pb-0">
+                                                    <input hidden name="order_id" value="<?php echo $row['order_id']; ?>">
+
+                                                    <p class="text-center"> Are you sure that <strong><?php echo htmlspecialchars($row['full_name']); ?></strong> 
+                                                    has successfully finished this order?<br>
+                                                   <i class="fa fa-arrow-circle-o-right"></i>
+                                                    Closing <strong> OR-<?php echo htmlspecialchars($row['order_id']); ?></strong>
+                                                    </p>
+
+                                                    <div class="form-group">
+                                                        <label for="date">Closing date</label>
+                                                        <input id="date" type="date" class="form-control" name="finishing_date" disabled  value="<?php echo date('Y-m-d');?>" id="">
+                                                    </div>
+
+                                                    
+
+                                                    <div class=" form-group">
+                                                        <label for="user">Reciever</label>
+                                                        <input id="user" type="text" class="form-control" disabled value="<?php echo $_SESSION['staff_user_name'];?>" id="">
+                                                    </div>
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-outline-success" data-dismiss="modal">No</button>
+                                                    <button type="submit" class="btn btn-success pull-left">Proceed</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
@@ -160,7 +249,7 @@
 
 <div class="modal fade" id="assign-artisen-to-order" role="dialog">
     <div class="modal-dialog">
-        <form action="/orders/assign_order_helper.php?r=/users/admin/admin-items/Orders/New-Orders.php" method="POST">
+        <form action="/orders/assign_order_helper.php?r=/users/admin/admin-items/Orders/Processing-Orders.php" method="POST">
             <!-- Modal content -->
             <div class="modal-content">
                 <div class="modal-header ">
@@ -209,4 +298,7 @@ $('#assign-artisen-to-order').on('show.bs.modal', function (event) {
 
 })
 
+
 </script>
+
+
