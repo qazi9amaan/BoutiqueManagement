@@ -22,7 +22,7 @@
     }
 
     $db = getDbInstance();
-    $select = array('s.specification_id', 's.specification_name', 's.specification_price', 's.created_by', 's.created_at','u.full_name');
+    $select = array('s.specification_id', 's.specification_name', 's.specification_final_price', 's.specification_artisan_price' ,'s.created_by', 's.created_at','u.full_name');
     
     if ($search_str) {
         $db->where('specification_name', '%' . $search_str . '%', 'like');
@@ -106,11 +106,12 @@
                         <table class="table bg-white table-bordered  table-sm  ">
                             <thead class="thead-light">
                             <tr >
-                                    <th width="5%" class="w-5">Id</th>
-                                    <th width="15%" class="w-15">By</th>
-                                    <th width="40%" class="w-40">Name</th>
-                                    <th width="15%" class="w-15">Price</th>
-                                    <th width="25%" class="w-25">Action</th>
+                                    <th  class="w-5">Id</th>
+                                    <th  class="w-15">By</th>
+                                    <th  class="w-40">Name</th>
+                                    <th  class="w-15">Artisen Cost</th>
+                                    <th  class="w-15">Price</th>
+                                    <th  class="w-25">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -123,7 +124,8 @@
                                     <td><?php echo htmlspecialchars($row['specification_id']); ?></td>
                                     <td><?php echo htmlspecialchars($row['full_name']); ?></td>
                                     <td><?php echo htmlspecialchars($row['specification_name']); ?></td>
-                                    <td class=><?php echo htmlspecialchars($row['specification_price']); ?> </td>
+                                    <td class=><?php echo htmlspecialchars($row['specification_artisan_price']); ?> </td>
+                                    <td class=><?php echo htmlspecialchars($row['specification_final_price']); ?> </td>
                                     <td >
                                         <button  data-toggle="modal" data-target="#edit-product-<?php echo $row['specification_id']; ?>" class="btn btn-success btn-sm mx-2 mt-md-0 mt-1 "><i class="fa fa-pencil"></i> Change  </button>
                                         <button  data-toggle="modal" data-target="#delete-product-<?php echo $row['specification_id']; ?>" class="btn btn-danger btn-sm mx-2 ml-md-0 mt-md-0  mt-1"><i class="fa fa-times"></i> Delete</button>

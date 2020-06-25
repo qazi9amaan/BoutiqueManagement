@@ -6,9 +6,14 @@
           required="required" id = "specification_name">
     </div> 
 
+    
     <div class="form-group">
-        <label for="specification_price">Specification Price *</label>
-          <input type="text" name="specification_price" value="<?php echo htmlspecialchars($edit ? $specs['specification_price'] : '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="Specification Price " class="form-control" required="required" id = "specification_price">
+        <label for="specification_price">Specification Artisan Price *</label>
+          <input type="text" name="specification_artisan_price" value="<?php echo htmlspecialchars($edit ? $specs['specification_artisan_price'] : '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="Specification Price " class="form-control" required="required" id = "specification_price">
+    </div> 
+    <div class="form-group">
+        <label for="specification_final_price">Specification Final Price *</label>
+          <input type="text" name="specification_final_price" value="<?php echo htmlspecialchars($edit ? $specs['specification_final_price'] : '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="Specification Price " class="form-control" required="required" id = "specification_final_price">
     </div> 
   <?php if(!$edit){?>
     <div class="form-group">

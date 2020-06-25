@@ -223,7 +223,7 @@
 
                                         <div class="col-12 specifications-item col-sm-3 mt-sm-0 ">
                                             <span>
-                                                <input value="<?php echo $spec['specification_id'];?>" name="specs[]" data-price="<?php echo $spec['specification_price'];?>" class="spec-item-js" id="<?php echo $spec['specification_id'];?>" type="checkbox"/>
+                                                <input value="<?php echo $spec['specification_id'];?>" name="specs[]" data-price="<?php echo $spec['specification_final_price'];?>"  data-artisan="<?php echo $spec['specification_artisan_price'];?>" class="spec-item-js" id="<?php echo $spec['specification_id'];?>" type="checkbox"/>
                                                 <label class="border rounded text-capitalize" for="<?php echo $spec['specification_id'];?>"> <?php echo $spec['specification_name'];?>
                                             </span>
                                         </div>
@@ -383,7 +383,7 @@
                                                         <input id="order_date" class="multisteps-form__input form-control " disabled value='<?php echo date('Y-m-d');?>' type="date" placeholder="Full Name"/>
                                                     </div>
                                                  </div>
-
+                                                <input hidden type="text" name="artisen_price" id="artisen-price">
                                                  <div class="form-row ">
                                                     <div class="col-12 form-group  col-sm-12">
                                                         <label class= "text-primary" for="delivery_date">Delivery Date</label>
@@ -430,18 +430,23 @@
 
 <script>
 var final_price =0;
+var a_final_price =0;
 $('.spec-item-js').change(function(){
-    final_price =0
+    final_price =0;
+    a_final_price =0;
     $('.spec-item-js:checkbox:checked').each(function(){
         final_price = final_price+parseInt($(this).data('price'));
+        a_final_price = a_final_price+parseInt($(this).data('artisan'));
     })
     $('#order_price').val(final_price);
+    $('#artisen-price').attr('value',a_final_price);
     $('.final-price').html(final_price);
 });
 $('#order_price').change(function(){
     if(this.value <final_price){
         if(confirm("Are you sure to go with this price?")){
             $('.final-price').html(this.value);
+
         }else{
             $('#order_price').val(final_price);
              $('.final-price').html(final_price);

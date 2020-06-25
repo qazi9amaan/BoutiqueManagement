@@ -1,11 +1,8 @@
-window.onload = function() {
-
-
-    // AJAX CALL TO GET CUTOMERS AND THE ORDERS PERDAY 
-
+// AJAX CALL TO GET CUTOMERS AND THE ORDERS PERDAY 
+function show_customers(data) {
     var optionsSpark3 = {
         series: [{
-            data: [1, 1, 2, 3, 4, 5, 67, 7, 8, 9],
+            data: data,
             name: "Customers",
         }],
         chart: {
@@ -33,7 +30,7 @@ window.onload = function() {
             min: 0
         },
         title: {
-            text: '10',
+            text: data.reduce((a, b) => a + b, 0),
             offsetX: 0,
             style: {
                 fontSize: '24px',
@@ -50,13 +47,16 @@ window.onload = function() {
             }
         }
     };
-
     var chartSpark3 = new ApexCharts(document.querySelector("#chart-sparkline-customers"), optionsSpark3);
     chartSpark3.render();
+}
+
+function show_orders(data) {
+
 
     var chart_orders = {
         series: [{
-            data: [1, 1, 2, 3, 4, 5, 67, 7, 8, 9],
+            data: data,
             name: "Orders",
         }],
         chart: {
@@ -84,7 +84,7 @@ window.onload = function() {
             min: 0
         },
         title: {
-            text: '0',
+            text: data.reduce((a, b) => a + b, 0),
             offsetX: 0,
             style: {
                 fontSize: '24px',
@@ -101,7 +101,29 @@ window.onload = function() {
             }
         }
     };
-
-    var chart_orders = new ApexCharts(document.querySelector("#chart-sparkline-orders"), chart_orders);
+    var chart_orders = new ApexCharts(document.querySelector(".chart-sparkline-orders"), chart_orders);
     chart_orders.render();
+
 }
+$(document).ready(function() {
+    jQuery.ajax({
+        url: "/users/admin/includes/charts/get-chart-details.php",
+        type: "GET",
+        data: 'get-all-customers=true',
+        success: function(data) {
+            show_customers(data);
+        },
+        dataType: "json"
+    });
+    jQuery.ajax({
+        url: "/users/admin/includes/charts/get-chart-details.php",
+        type: "GET",
+        data: 'get-all-orders=true',
+        success: function(data) {
+            console.log(data);
+            show_orders(data);
+        },
+        dataType: "json"
+    });
+
+});

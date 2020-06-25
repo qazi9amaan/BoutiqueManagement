@@ -80,6 +80,7 @@
             $data_order["advance_money"] = $data['advance_money'];
             $data_order["delivery_date"] = $data['delivery_date'];
             $data_order["measurement_id"]= $measurement_id;
+            $data_order["artisen_price"] = $data['artisen_price'];
             $order_id = $db->insert('orders', $data_order);
             if ($order_id)
             { 

@@ -2,32 +2,33 @@
 <?php require_once '/var/www/html/libraries/config/config.php';?>
 <?php include PARENT .'/includes/header.php';?>
 <?php include PARENT .'/users/admin/includes/style-scripts.php';?>
-<?php include PARENT .'/users/admin/includes/auth-validate.php';?>
 
 <?php
+    $db = getDbInstance();
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') 
 {
     $data_to_db = array_filter($_POST);
-    $data_to_db['created_at'] = date('Y-m-d H:i:s');
-    $data_to_db['password'] = password_hash($data_to_db['phone_number'], PASSWORD_DEFAULT);
-
-    $db = getDbInstance();
-    $last_id = $db->insert('staff_accounts', $data_to_db);
-    if ($last_id)
+    $data_to_db['password']= password_hash($data_to_db['password'], PASSWORD_DEFAULT);;
+    $db->where('id', $data_to_db['id']);
+    $status = $db->update('staff_accounts',$data_to_db);
+    if ($status)
     {
-        $_SESSION['success'] = 'Staff added successfully!';
-        header('Location: add_staff.php');
+        $_SESSION['success'] = 'Password changed successfully!';
+        header('Location: settings.php');
     	exit();
     }
     else
     {
-        $_SESSION['failure'] ='Insert failed: ' . $db->getLastError();
-        header('Location: add_staff.php');
+        $_SESSION['failure']= ' failed: ' . $db->getLastError();
+        header('Location: settings.php');
         exit();
     }
 }
 
     $edit= false;
+    $rows = $db->get('staff_accounts');
+
 ?>
 
 <body>
@@ -38,8 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb p-0 m-0 bg-white">
                     <li class="breadcrumb-item"><a href="/users/admin">Home</a></li>
-                    <li class="breadcrumb-item"><a href="/users/admin/admin-items/Staff/staff-members.php">Staff Members</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Create</li>
+                    <li class="breadcrumb-item"><a href="/users/admin/admin-items/Customers/Customers.php">Settings</a></li>
                 </ol>
             </nav>
         </div>  
@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                         <div class="card-body">
                             <!-- header -->
                             <div class=" d-flex pt-3  card-footer bg-primary text-white rounded border justify-content-between align-items-baseline ">
-                                <h4 class="text-uppercase  lead">Add a Staff Member</h4>
+                                <h4 class="text-uppercase  lead">Change Password</h4>
                             </div>
                            
                         </div>
@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                                 </div>
                                 <div class="col-12">
                                     <form class="form" action="" method="post"  enctype="multipart/form-data">
-                                        <?php include PARENT.'/users/admin/forms/staff_form.php'; ?>
+                                        <?php include PARENT.'/users/admin/forms/settings.php'; ?>
                                     </form>
                                 </div>
                                 

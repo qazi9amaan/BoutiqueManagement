@@ -9,7 +9,7 @@
         $customer+=$db->where('cust_id', $customer['cust_id'])->getOne('customer');
         $customer+=$db->where('product_id', $customer['product_id'])->getOne('products');
         $specs = $db->where('specification_id',explode(",",$customer['specifications']), 'IN')->get('specifications');
-        $total_spec_price = $db->where('specification_id',explode(",",$customer['specifications']), 'IN')->getValue('specifications','SUM(specification_price)');
+        $total_spec_price = $db->where('specification_id',explode(",",$customer['specifications']), 'IN')->getValue('specifications','SUM(specification_final_price)');
         $measurement=$db->where('id', $customer['measurement_id'])->getOne('measurements');
 
     }    
@@ -123,7 +123,7 @@
                         <div class="d-flex my-2  justify-content-between align-items-center">
                             <span><?php echo $counter.".&nbsp; &nbsp;". $spec['specification_name']; ?></span>
                             <span>
-                                <span><?php echo $spec['specification_price']; ?></span>
+                                <span><?php echo $spec['specification_final_price']; ?></span>
                                 /=
                             </span>
                         </div>

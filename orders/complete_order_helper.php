@@ -23,6 +23,8 @@ if ($id && $_SERVER['REQUEST_METHOD'] == 'POST')
     $data_order["measurement_id"]= $order['measurement_id'];
     $data_order["extended_reason"]= $order['extended_reason'];
     $data_order["previous_delivery"]= $order['previous_delivery'];
+    $data_order["artisen_price"]= $order['artisen_price'];
+
     $data_order["finishing_date"]= date('Y-m-d');
     $data_order["payment"]= '';
 

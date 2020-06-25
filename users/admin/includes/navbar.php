@@ -56,6 +56,12 @@
             ><a class=" streched-link" href="/users/admin/admin-items/Sales/sales.php">
             <i class="fa fa-line-chart"></i>&nbsp; Sales</a></li>
 
+            <li
+            <?php echo (CURRENT_PAGE == 'settings.php' ) ? 'class="active"' : ''; ?>
+            ><a class=" streched-link" href="/users/admin/admin-items/settings.php">
+            <i class="fa fa-gear"></i> &nbsp;Settings</a></li>
+
+
 
             <li
             <?php echo (CURRENT_PAGE == 'logout.php' ) ? 'class="active"' : ''; ?>

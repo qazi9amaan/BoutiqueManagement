@@ -19,6 +19,7 @@
        $data = $db->orderBy('created_at', 'DESC')->get("customer", "count(*)");
 
 ?>
+
 <body>
 <div class="wrapper">
     <?php include 'includes/navbar.php';?>
@@ -42,8 +43,8 @@
                         </div>
                     </div>
                     <div  class="col-lg-6  m-0 p-0 ml-md-2 mb-4">
-                        <div  class="card h-100 bg-blue-light-chart  ">
-                            <div id="chart-sparkline-orders"
+                        <div  class="card h-100 bg-blue-light-chart  p-3">
+                            <div class="chart-sparkline-orders"
                              class="card-body ">
                             </div>
                             <a href="#" class="stretched-link"></a>
@@ -275,4 +276,7 @@
 </div>
 
 </body>
+
 <?php include PARENT .'/includes/scripts.php';?>
+<script src="/assests/js/ajax.js"></script>
+<script src="/users/admin/assests/js/charts.js"></script>

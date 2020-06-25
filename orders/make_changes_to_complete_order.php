@@ -24,6 +24,7 @@ if ($id && $_SERVER['REQUEST_METHOD'] == 'POST')
     $data_order["extended_reason"]= $data['extended_reason'];
     $data_order["previous_delivery"]= $order['delivery_date'];
     $data_order["order_status"]= 'assigned';
+    $data_order["artisen_price"]= $order['artisen_price'];
 
     $status = $db->insert('orders',$data_order);
     if ($status) 

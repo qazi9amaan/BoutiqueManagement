@@ -49,6 +49,7 @@
                     <th scope="col">#</th>
                     <th scope="col">Placed</th>
                     <th scope="col">Delivery</th>
+                    <th scope="col">Artisen Cost</th>
                     <th scope="col">Price</th>
                     <th scope="col">Advance</th>
                     <th scope="col">Pending</th>
@@ -57,6 +58,7 @@
                     <th scope="row"><?php echo htmlspecialchars($current_work['order_id']); ?></th>
                     <td ><?php echo date('j F Y', strtotime($current_work['ordered_at'])); ?> </td>
                     <td > <?php echo date('j F Y', strtotime($current_work['delivery_date'])); ?></td>
+                    <td ><?php echo htmlspecialchars($current_work['artisen_price']); ?> </td>
                     <td ><?php echo htmlspecialchars($current_work['order_price']); ?> </td>
                     <td ><?php echo htmlspecialchars($current_work['advance_money']); ?> </td>
                     <td ><?php echo htmlspecialchars((float)$current_work['order_price']-(float)$current_work['advance_money']); ?> </td>
@@ -160,10 +162,7 @@
                         <span><i class="fa fa-shopping-bag">&nbsp;</i> Completed orders</span>
                         <span><?php echo $numOrders; ?></span>
                     </div>
-                    <div class="d-flex justify-content-between py-2">
-                        <span><i class="fa fa-money">&nbsp;</i> Salary earned</span>
-                        <span><?php echo (int)$numOrders * (int)$artist['staff_salary']?></span>
-                    </div>
+                   
                 </div>
             </div>
             <div class="card mt-3">

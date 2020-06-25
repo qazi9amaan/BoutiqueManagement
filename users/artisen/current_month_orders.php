@@ -30,7 +30,8 @@
     <tr>
       <th scope="col">#</th>
       <th scope="col">Placed</th>
-      <th scope="col">Delivery</th>
+      <th scope="col">Delivery</th>  
+          <th scope="col">Artisen Cost</th>
       <th scope="col">Price</th>
       <th scope="col">Advance</th>
       <th scope="col">Pending</th>
@@ -45,6 +46,7 @@
       <th scope="row"><?php echo htmlspecialchars($row['order_id']); ?></th>
       <td ><?php echo date('j F Y', strtotime($row['ordered_at'])); ?> </td>
       <td > <?php echo date('j F Y', strtotime($row['delivery_date'])); ?></td>
+      <td ><?php echo htmlspecialchars($row['artisen_price']); ?> </td>
       <td ><?php echo htmlspecialchars($row['order_price']); ?> </td>
       <td ><?php echo htmlspecialchars($row['advance_money']); ?> </td>
       <td ><?php echo htmlspecialchars((float)$row['order_price']-(float)$row['advance_money']); ?> </td>

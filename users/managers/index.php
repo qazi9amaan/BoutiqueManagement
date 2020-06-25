@@ -17,18 +17,18 @@
     <?php include PARENT .'/users/managers/includes/navbar.php';?>
     <div id="main_content" class="container-fluid">
     <div class="header mb-4 d-flex align-items-baseline justify-content-between ">
-            <span>Welcome to managing console,<strong> <?php echo $_SESSION['staff_user_name'];?></strong>!  Have a nice day. </span>
+            <span>Welcome,<strong> <?php echo $_SESSION['staff_user_name'];?></strong>!  Have a nice day. </span>
             <a href="/main-page.php" class="btn btn-primary">Place a new order</a> 
         </div> 
         
         
         <div class="info mt-0">
 
-            <div class="container-fluid p-0 m-0">
+        <div class="container-fluid p-0 m-0">
                 <div class="row p-2">
-                    <div  class="col-md-12  m-0 p-0 ml-md-2 mb-4">
+                    <div  class="col-lg-12  m-0 p-0 ml-md-2 mb-4">
                         <div  class="card h-100 bg-blue-light-chart  ">
-                            <div id="chart-sparkline-orders"
+                            <div class="chart-sparkline-orders"
                              class="card-body ">
                             </div>
                             <a href="#" class="stretched-link"></a>
@@ -186,3 +186,5 @@
 
 </body>
 <?php include PARENT .'/includes/scripts.php';?>
+<script src="/assests/js/ajax.js"></script>
+<script src="/users/admin/assests/js/charts.js"></script>

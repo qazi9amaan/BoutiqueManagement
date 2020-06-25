@@ -51,6 +51,7 @@ table{
       <th scope="col">#</th>
       <th scope="col">Placed</th>
       <th scope="col">Delivery</th>
+      <th scope="col">Artisen Cost</th>
       <th scope="col">Price</th>
       <th scope="col">Advance</th>
       <th scope="col">Pending</th>
@@ -60,23 +61,29 @@ table{
   </thead>
 
   <tbody>
-  <?php foreach ($rows as $row): ?>
+
+  <?php 
+  $sal = 0;
+  foreach ($rows as $row): ?>
     <tr>
       <th scope="row"><?php echo htmlspecialchars($row['order_id']); ?></th>
       <td ><?php echo date('d/m/y', strtotime($row['ordered_at'])); ?> </td>
       <td > <?php echo date('d/m/y', strtotime($row['delivery_date'])); ?></td>
+      <td ><?php echo htmlspecialchars($row['artisen_price']); ?> </td>
       <td ><?php echo htmlspecialchars($row['order_price']); ?> </td>
       <td ><?php echo htmlspecialchars($row['advance_money']); ?> </td>
       <td ><?php echo htmlspecialchars((float)$row['order_price']-(float)$row['advance_money']); ?> </td>
       <td ><?php echo date('d/m/y', strtotime($row['finishing_date'])); ?> </td>
     </tr>
-    <?php endforeach; ?>
+    <?php 
+  $sal = $sal+(int)$row['artisen_price'];
+  endforeach; ?>
   </tbody>
 </table>
 <div class="cost">
 <span>Salary</span>
 <div class="amount">
-Rs <?php echo (int)$total * (int)$salary?> /=
+Rs <?php echo $sal?> /=
 </div>
 </div>
 
