@@ -58,7 +58,7 @@
                     <th scope="row"><?php echo htmlspecialchars($current_work['order_id']); ?></th>
                     <td ><?php echo date('j F Y', strtotime($current_work['ordered_at'])); ?> </td>
                     <td > <?php echo date('j F Y', strtotime($current_work['delivery_date'])); ?></td>
-                    <td ><?php echo htmlspecialchars($current_work['artisen_price']); ?> </td>
+                    <td ><?php echo htmlspecialchars($current_work['    ']); ?> </td>
                     <td ><?php echo htmlspecialchars($current_work['order_price']); ?> </td>
                     <td ><?php echo htmlspecialchars($current_work['advance_money']); ?> </td>
                     <td ><?php echo htmlspecialchars((float)$current_work['order_price']-(float)$current_work['advance_money']); ?> </td>
