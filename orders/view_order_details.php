@@ -9,7 +9,7 @@
         $customer+=$db->where('cust_id', $customer['cust_id'])->getOne('customer');
         $customer+=$db->where('product_id', $customer['product_id'])->getOne('products');
         $specs = $db->where('specification_id',explode(",",$customer['specifications']), 'IN')->get('specifications');
-        $total_spec_price = $db->where('specification_id',explode(",",$customer['specifications']), 'IN')->getValue('specifications','SUM(specification_price)');
+            $total_spec_price = $db->where('specification_id',explode(",",$customer['specifications']), 'IN')->getValue('specifications','SUM(specification_final_price)');
         $measurement=$db->where('id', $customer['measurement_id'])->getOne('measurements');
         $artist_name=$db->where('id', $customer['artisen_assigned'])->getValue('staff_accounts','full_name');
     }    

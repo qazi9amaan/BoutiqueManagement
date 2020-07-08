@@ -145,41 +145,15 @@
 
                                     <td >
                                         <a href="/orders/view_order_details.php?order=<?php echo htmlspecialchars($row['order_id']); ?>" class="btn btn-sm btn-success"><i class="fa fa-eye">&nbsp;View</i></a>
-                                        <button  data-toggle="modal" data-target="#edit-order-<?php echo $row['order_id']; ?>" class="btn btn-success btn-sm mx-2 mt-md-0 mt-1 "><i class="fa fa-pencil"></i> Change  </button>
                                         <button  data-toggle="modal" data-target="#delete-order-<?php echo $row['order_id']; ?>" class="btn btn-danger btn-sm mx-2 ml-md-0 mt-md-0  mt-1"><i class="fa fa-times"></i> Delete</button>
                                         <a href="/orders/complete-order-noti.php?order=<?php echo htmlspecialchars($row['order_id']); ?>" class="btn btn-sm btn-outline-primary"><i class="fa fa-print">&nbsp;Print</i></a>
                                         <button data-order_id="<?php echo $row['order_id']; ?>" data-toggle="modal" data-target="#assign-artisen-to-order" class="btn btn-primary btn-sm mx-2 ml-md-0 mt-md-0  mt-1"><i class="fa fa-user-circle"></i>  Assign Artisen</button>
                                     </td>
                                 </tr>
                                 
-                                <div class="modal fade" id="delete-order-<?php echo $row['order_id']; ?>" role="dialog">
-                                    <div class="modal-dialog">
-                                        <form action="/orders/delete_order.php?r=/users/admin/admin-items/Orders/New-Orders.php" method="POST">
-                                            <!-- Modal content -->
-                                            <div class="modal-content">
-                                                <div class="modal-header ">
-                                                    <a>Confirmination </a>
-                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                </div>
-                                                <div class="modal-body mb-0 pb-0">
-                                                    <input hidden name="order_id" value="<?php echo $row['order_id']; ?>">
+                             
 
-                                                    <p class="text-center"> Are you sure you want to delete this order?<br>
-                                                   <i class="fa fa-arrow-circle-o-right"></i>
-                                                    Deleting <strong> OR-<?php echo htmlspecialchars($row['order_id']); ?></strong>
-                                                    </p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-outline-success" data-dismiss="modal">No</button>
-                                                    <button type="submit" class="btn btn-success pull-left">Proceed</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            
-
-                                <div class="modal fade" id="edit-customer-<?php echo $row['cust_id']; ?>" role="dialog">
+                                <div class="modal fade" id="edit-order-<?php echo $row['order_id']; ?>" role="dialog">
                                     <div class="modal-dialog">
                                         <form action="/users/admin/admin-items/Customers/edit.php" method="POST">
                                             <div class="modal-content">
